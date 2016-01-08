@@ -7,7 +7,7 @@ This is a boilerplate that utilizes Webpack with React. The purpose is to have a
 * Animation with velocity-react (https://github.com/twitter-fabric/velocity-react)
 * Device Detection with mobile-detect (https://github.com/hgoebl/mobile-detect.js)
 
-> Depending on project, extra modules may be added using `npm install <module> --save-dev`. If you add any extra module, it is highly recommended to document it in this README so that others can re-use them easily in the future.
+Depending on project, extra modules may be added using `npm install <module> --save-dev`. If you add any extra module, it is highly recommended to document it in this README so that others can re-use them easily in the future.
 
 ### Install and Run
 
@@ -26,14 +26,7 @@ $ npm run serve
 
 ### Build
 
-* Go to *app/dist/index.html* and delete the following lines:
-
-```
-<pre>
-<!-- Script below must be removed before releasing -->
-<script src="http://localhost:8080/webpack-dev-server.js"></script>
-</pre>
-````
+* Go to *app/dist/index.html* and delete the lines <script src="http://localhost:8080/webpack-dev-server.js"></script>
 
 * Run the following code:
 
@@ -41,8 +34,7 @@ $ npm run serve
 $ npm run build
 ```
 
-
-
+___
 
 # Modules
 
@@ -65,7 +57,7 @@ The recommendation from github is the following: `webpack-dev-server --content-b
 
 ### Watching source files for change and auto-refreshing browser
 
-I have used 'inline mode' that was explained in webpack documentation. It is to add `<script src="http://localhost:8080/webpack-dev-server.js"></script>` to html. Before release, the line must be removed from the html.
+I have used 'inline mode' that was explained in webpack documentation. It is to add `<script src=\\"http://localhost:8080/webpack-dev-server.js\\"></script>` to html. Before release, the line must be removed from the html.
 
 
 # react-router
