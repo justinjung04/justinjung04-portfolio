@@ -26,7 +26,7 @@ $ npm run serve
 
 ### Build
 
-* Go to *app/dist/index.html* and delete the lines <script src="http://localhost:8080/webpack-dev-server.js"></script>
+* Go to *app/dist/index.html* and delete the lines `<script src='http://localhost:8080/webpack-dev-server.js'></script>`
 
 * Run the following code:
 
@@ -57,7 +57,7 @@ The recommendation from github is the following: `webpack-dev-server --content-b
 
 ### Watching source files for change and auto-refreshing browser
 
-I have used 'inline mode' that was explained in webpack documentation. It is to add `<script src=\\"http://localhost:8080/webpack-dev-server.js\\"></script>` to html. Before release, the line must be removed from the html.
+I have used 'inline mode' that was explained in webpack documentation. It is to add `<script src='http://localhost:8080/webpack-dev-server.js'></script>` to html. Before release, the line must be removed from the html.
 
 
 # react-router
