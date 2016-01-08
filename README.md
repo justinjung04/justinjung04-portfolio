@@ -1,4 +1,4 @@
-# Webpack Biolerplate
+# Webpack Boilerplate
 
 This is a boilerplate that utilizes Webpack with React. The purpose is to have a light base template that has only necessary modules. The modules included in this boilerplate are:
 
