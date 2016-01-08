@@ -26,7 +26,7 @@ $ npm run serve
 
 ### Build
 
-* Go to *app/dist/index.html* and delete the lines `<script src='http://localhost:8080/webpack-dev-server.js'>``</script>`
+* Go to *app/dist/index.html* and delete the lines "<script src='http://localhost:8080/webpack-dev-server.js'></script>"
 
 * Run the following code:
 
