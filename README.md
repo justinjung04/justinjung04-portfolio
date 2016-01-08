@@ -55,7 +55,7 @@ $ npm install webpack-dev-server --save-dev
 
 ### Running the server that can be accessed with IP address
 
-The recommendation from github is the following: `webpack-dev-server --content-base app/dist/`. HOWEVER, the script doesn't allow the website to be access from other devices in the network using IP address (i.e. if you want to view the website on your mobile device, you can't). A workaround is the following: `webpack-dev-server --host 0.0.0.0 --content-base app/dist/`. This code allows the local machine to access through "localhost:8080" and other devices to access through "[IPaddress]:8080".
+The recommendation from github is the following: `webpack-dev-server --content-base app/dist/`. HOWEVER, the script doesn't allow the website to be access from other devices in the network using IP address (i.e. if you want to view the website on your mobile device, you can't). A workaround is the following: `webpack-dev-server --host 0.0.0.0 --content-base app/dist/`. This code allows the local machine to access through `localhost:8080` and other devices to access through `[IP address]:8080`.
 
 ### Watching source files for change and auto-refreshing browser
 
@@ -93,7 +93,7 @@ import { createHistory } from 'history';
 
 HOWEVER, there are some drawbacks. When a user wants to access the sub-directory directly, it will throw an error (i.e. navigation starting at `localhost:8080` would work, but refreshing at `localhost:8080/page1` wouldn't work) . This is because there is no rewrite on webpack-dev-server, and thus makes it very annoying when developing. If you want to use createHistory, it is recommended to add it before release along with url rewrite.
 
-###### *Side-note URL rewrite*
+###### *Side-note: URL rewrite*
 
 If the hosting server is Apache, you can add a file *.htaccess* and copy the following code:
 
@@ -142,9 +142,11 @@ $ npm install velocity-react --save-dev
 
 ### VelocityComponent
 
-Component to add animations to an element and its children. Must Wrap only single element.
+Component to add animations to an element and its children. Must wrap a single element only.
 
 ```javascript
+import { VelocityComponent } from 'velocity-react';
+
 this.fadeAwayAnimation = {
     duration: 500,
     delay: 500,
@@ -167,12 +169,14 @@ this.fadeAwayAnimation = {
 Add enter and leave animations to an element when mounting and unmounting respectively. Useful for creating page transitions.
 
 ```javascript
+import { VelocityTransitionGroup } from 'velocity-react';
+
 this.enterAnimation = {
     duration: 500,
     delay: 500,
     easing: 'ease',
     animation: {
-        opacity: [1, 0],
+        opacity: [1, 0],  // [{to}, {from}]
         translateY: [0, '5%']
     }
 };
@@ -184,6 +188,7 @@ this.leaveAnimation = {
         translateY: ['5%', 0]
     }
 };
+...
 <VelocityTransitionGroup enter={this.enterAnimation} leave={this.leaveAnimation}>
     // here, you must pass a unique key for each child as a property. window.location is a good example of a unique key
     // you can also pass extra properties to children
