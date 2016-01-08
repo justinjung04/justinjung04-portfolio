@@ -7,7 +7,7 @@ This is a boilerplate that utilizes Webpack with React. The purpose is to have a
 * Animation with velocity-react (https://github.com/twitter-fabric/velocity-react)
 * Device Detection with mobile-detect (https://github.com/hgoebl/mobile-detect.js)
 
-Depending on project, extra modules may be added using `npm install <module> --save-dev`. If you add any extra module, it is highly recommended to document it in this README so that others can re-use them easily in the future.
+> Depending on project, extra modules may be added using `npm install <module> --save-dev`. If you add any extra module, it is highly recommended to document it in this README so that others can re-use them easily in the future.
 
 ### Install and Run
 
@@ -28,9 +28,11 @@ $ npm run serve
 
 * Go to *app/dist/index.html* and delete the following lines:
 
-```sh
+```
+<pre>
 <!-- Script below must be removed before releasing -->
 <script src="http://localhost:8080/webpack-dev-server.js"></script>
+</pre>
 ````
 
 * Run the following code:
@@ -78,7 +80,7 @@ $ npm install react-router --save-dev
 
 ### URL & History
 
-The boilerplate uses a class called createHashHistory as a default. It generates url with /#<sub-directory><hash-value>, and is implemented in *app.js* by the following:
+The boilerplate uses a class called createHashHistory as a default. It generates url with /#[sub-directory][hash-value], and is implemented in *app.js* by the following:
 
 ```javascript
 import { createHashHistory }  from 'history';
@@ -86,7 +88,7 @@ import { createHashHistory }  from 'history';
 <Router history={createHashHistory()}>
 ```
 
-There is another class called createHistory. It generates url with /<sub-directory>, and is implemented in *app.js* by the following:
+There is another class called createHistory. It generates url with /[sub-directory], and is implemented in *app.js* by the following:
 
 ```javascript
 import { createHistory }  from 'history';
