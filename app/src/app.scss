@@ -1,0 +1,63 @@
+@import './styles/mixins.scss';
+@import './styles/variables.scss';
+
+html, body, #app {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	font-size: $font_general;
+}
+
+div {
+	box-sizing: border-box;
+}
+
+a {
+	text-decoration: none;
+	text-transform: uppercase;
+	text-decoration: none;
+	letter-spacing: $letter_spacing;
+	font-size: $font_link;
+}
+
+h1 {
+	font-size: $font_h1;
+}
+
+h2 {
+	font-size: $font_h2;
+}
+
+h3 {
+	font-size: $font_h3;
+}
+
+h4 {
+	font-size: $font_h4;
+}
+
+h5 {
+	font-size: $font_h5;
+}
+
+.section {
+	.content {
+		position: absolute;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		padding: 20px;
+	}
+
+	&.desktop {
+		.content {
+			top: $header_height;
+		}
+	}
+
+	&.phone {
+		.content {
+			top: 0;
+		}
+	}
+}
