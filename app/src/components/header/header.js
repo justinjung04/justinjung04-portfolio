@@ -7,14 +7,19 @@ import { Link, History } from 'react-router';
 export default class Header extends Component {
 	constructor() {
 		super();
-
 		this.state ={
 			overlay: false
 		};
 	}
 
+	componentDidMount() {
+		
+	}
+
 	onClickDesktop(url) {
-		this.history.pushState(null, url);
+		if(this.props.url != url) {
+			this.history.pushState(null, url);	
+		}
 	}
 
 	onClickMobile(url) {
@@ -38,12 +43,12 @@ export default class Header extends Component {
 	renderDesktop() {
 		return (
 			<div className={'header ' + this.props.device}>
-				<img className='logo' src={require('../../images/logo_tb.png')} onClick={this.onClickDesktop.bind(this)} />
+				<img className='logo' src={require('../../images/logo_tb.png')} onClick={this.onClickDesktop.bind(this, '/')} />
 				<div className='links'>
-					<div className='link' onClick={this.onClickDesktop.bind(this, '/')}>
+					<div className={'link' + (this.props.url == '/' ? ' active' : '')} onClick={this.onClickDesktop.bind(this, '/')}>
 						home
 					</div>
-					<div className='link' onClick={this.onClickDesktop.bind(this, '/page1')}>
+					<div className={'link' + (this.props.url == '/page1' ? ' active' : '')} onClick={this.onClickDesktop.bind(this, '/page1')}>
 						page 1
 					</div>
 				</div>

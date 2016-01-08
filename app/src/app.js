@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import MobileDetect from 'mobile-detect';
 import { Router, Route, IndexRoute } from 'react-router';
 import { VelocityTransitionGroup } from 'velocity-react';
-import { createHistory }  from 'history';
+import { createHashHistory }  from 'history';
 
 import Header from './components/header/header';
 import Home from './components/home/home';
@@ -45,9 +45,9 @@ class App extends Component {
 	render() {
 		return (
 			<div className={'section ' + this.device}>
-				<Header device={this.device} />
+				<Header device={this.device} url={this.props.location.pathname} />
 				<VelocityTransitionGroup enter={this.enterAnimation} leave={this.leaveAnimation}>
-					{React.cloneElement(this.props.children, {key: window.location, device: this.device})}
+					{React.cloneElement(this.props.children, {key: this.props.location.pathname, url: this.props.location.pathname, device: this.device})}
 				</VelocityTransitionGroup>
 			</div>
 		);
@@ -55,7 +55,7 @@ class App extends Component {
 };
 
 ReactDOM.render((
-	<Router history={createHistory()}>
+	<Router history={createHashHistory()}>
     <Route path='/' component={App}>
       <IndexRoute component={Home} />
       <Route path='page1' component={Page1} />
