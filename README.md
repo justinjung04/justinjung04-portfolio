@@ -7,7 +7,7 @@ This is a boilerplate that utilizes Webpack with React. The purpose is to have a
 * Animation with velocity-react (https://github.com/twitter-fabric/velocity-react)
 * Device Detection with mobile-detect (https://github.com/hgoebl/mobile-detect.js)
 
-Depending on project, extra modules may be added using `npm install <module> --save-dev`. If you add any extra module, it is highly recommended to document it in this README so that others can re-use them easily in the future.
+Depending on project, extra modules may be added using `npm install [module] --save-dev`. If you add any extra module, it is highly recommended to document it in this README so that others can re-use them easily in the future.
 
 ### Install and Run
 
@@ -26,7 +26,7 @@ $ npm run serve
 
 ### Build
 
-* Go to *app/dist/index.html* and delete the lines `<script src='http<i></i>://localhost:8080/webpack-dev-server.js'></script>`
+* Go to *app/dist/index.html* and delete the line `<script src='http://localhost:8080/webpack-dev-server.js'></script>`
 
 * Run the following code:
 
