@@ -75,7 +75,7 @@ $ npm install react-router --save-dev
 The boilerplate uses a class called createHashHistory as a default. It generates url with /#[sub-directory][hash-value], and is implemented in *app.js* by the following:
 
 ```javascript
-import { createHashHistory }  from 'history';
+import { createHashHistory } from 'history';
 ...
 <Router history={createHashHistory()}>
 ```
@@ -83,7 +83,7 @@ import { createHashHistory }  from 'history';
 There is another class called createHistory. It generates url with /[sub-directory], and is implemented in *app.js* by the following:
 
 ```javascript
-import { createHistory }  from 'history';
+import { createHistory } from 'history';
 ...
 <Router history={createHistory()}>
 ```
