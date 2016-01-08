@@ -53,7 +53,7 @@ $ npm install webpack-dev-server --save-dev
 
 ### Running the server that can be accessed with IP address
 
-The recommendation from github is the following: `webpack-dev-server --content-base app/dist/`. HOWEVER, the script doesn't allow the website to be access from other devices in the network using IP address (i.e. if you want to view the website on your mobile device, you can't). A workaround is the following: `webpack-dev-server --host --content-base 0.0.0.0 app/dist/`. This code allows the local machine to access through "localhost:8080" and other devices to access through "<IPaddress>:8080".
+The recommendation from github is the following: `webpack-dev-server --content-base app/dist/`. HOWEVER, the script doesn't allow the website to be access from other devices in the network using IP address (i.e. if you want to view the website on your mobile device, you can't). A workaround is the following: `webpack-dev-server --host 0.0.0.0 --content-base app/dist/`. This code allows the local machine to access through "localhost:8080" and other devices to access through "<IPaddress>:8080".
 
 ### Watching source files for change and auto-refreshing browser
 
