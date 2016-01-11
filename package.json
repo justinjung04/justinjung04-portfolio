@@ -6,16 +6,21 @@
   "repository": "git@git.assembla.com:tb-internal.webpack-boilerplate.git",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --config webpack.config.build.js",
-    "serve": "webpack-dev-server --host 0.0.0.0 --content-base app/dist/"
+    "build": "npm run clean && webpack --config webpack.config.build.js",
+    "build-windows": "clean-windows && webpack --config webpack.config.build.js",
+    "serve": "webpack-dev-server --host 0.0.0.0 --content-base app/dist/",
+    "clean": "rm -rf app/dist & mkdir app/dist",
+    "clean-windows": "rd /s /q app/dist & mkdir app/dist"
   },
   "devDependencies": {
     "babel-loader": "^6.2.0",
     "babel-preset-es2015": "^6.1.18",
     "babel-preset-react": "^6.1.18",
+    "copy-webpack-plugin": "^0.3.3",
     "css-loader": "^0.23.0",
     "file-loader": "^0.8.5",
     "history": "^1.17.0",
+    "html-webpack-plugin": "^1.7.0",
     "mobile-detect": "^1.3.1",
     "node-sass": "^3.4.2",
     "react": "^0.14.5",

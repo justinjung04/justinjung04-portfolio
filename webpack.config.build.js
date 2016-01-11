@@ -1,4 +1,6 @@
 var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
 	entry: __dirname + '/app/src/app.js',
@@ -19,7 +21,7 @@ module.exports = {
 			version: false,
 			hash: false,
 			timings: true,
-			chunks: false,
+			chunks: true,
 			chunkModules: false
 		}
 	},
@@ -29,8 +31,8 @@ module.exports = {
 			{ test: /\.js$/, exclude: '/node_modules/', loader: 'babel', query: {presets:['react', 'es2015'], compact: false} },
 			{ test: /\.css$/, loader: 'style!css' },
 			{ test: /\.scss/, loader: 'style!css!sass' },
-			{ test: /\.(png|jpg|woff|woff2|eot|ttf|otf)/, loader: 'url' },
-			{ test: /\.svg/, loader: 'file?name=/img/[hash].[ext]?' }
+			{ test: /\.(png|jpg|woff|ttf)/, loader: 'url?limit=10000' },
+			{ test: /\.(svg|mp4|webm)/, loader: 'file?name=/img/[hash].[ext]?' }
 		]
 	},
 
@@ -39,6 +41,23 @@ module.exports = {
 			compress: {
 				warnings: false 
 			}
-		})
+		}),
+
+		new HtmlWebpackPlugin({ 
+			filename: 'index.html',
+			template: __dirname + '/app/src/index.html',
+			dev: false,
+			minify: {
+				removeComments: true,
+				collapseWhitespace: true
+			}
+		}),
+
+		new CopyWebpackPlugin([
+			{
+				from: __dirname + '/app/src/files',
+				to: '.'
+			}
+		])
 	]
 };
