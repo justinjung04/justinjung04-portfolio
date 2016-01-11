@@ -6,11 +6,9 @@
   "repository": "git@git.assembla.com:tb-internal.webpack-boilerplate.git",
   "license": "MIT",
   "scripts": {
-    "build": "npm run clean && webpack --config webpack.config.build.js",
-    "build-windows": "clean-windows && webpack --config webpack.config.build.js",
-    "serve": "webpack-dev-server --host 0.0.0.0 --content-base app/dist/",
-    "clean": "rm -rf app/dist & mkdir app/dist",
-    "clean-windows": "rd /s /q app/dist & mkdir app/dist"
+    "build": "rm -rf app/dist & webpack --config webpack.config.build.js",
+    "build-windows": "rd app/dist /s /q & webpack --config webpack.config.build.js",
+    "serve": "webpack-dev-server --host 0.0.0.0 --content-base app/dist/"
   },
   "devDependencies": {
     "babel-loader": "^6.2.0",
