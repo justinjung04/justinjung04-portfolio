@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "build": "rm -rf app/dist & webpack --config webpack.config.build.js",
-    "build-windows": "rd app/dist /s /q & webpack --config webpack.config.build.js",
+    "build-cmd": "rd app/dist /s /q & webpack --config webpack.config.build.js",
     "serve": "webpack-dev-server --host 0.0.0.0 --content-base app/dist/"
   },
   "devDependencies": {
