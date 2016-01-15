@@ -7,16 +7,12 @@ export default class Page1 extends Component {
 		super();
 	}
 
-	componentDidMount() {
-
-	}
-
 	render() {
 		return (
 			<div className={'content page1 ' + this.props.device}>
 				<h1>Page 1</h1>
-				This is page 1
+				<p>This is page 1</p>
 			</div>
-		)
+		);
 	}
 }

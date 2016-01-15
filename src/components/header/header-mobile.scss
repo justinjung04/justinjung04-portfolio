@@ -1,0 +1,22 @@
+@import '../../styles/variables.scss';
+
+.header.mobile {
+	background-color: $accent;
+
+	.title,
+	.link {
+		color: $black;
+	}
+
+	.link {
+		&:hover {
+			background-color: $light_primary;
+			color: $dark_primary;
+		}
+
+		&.active {
+			background-color: $light_primary;
+			color: $dark_primary;
+		}
+	}
+}

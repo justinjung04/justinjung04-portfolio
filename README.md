@@ -2,14 +2,16 @@
 
 This is a boilerplate that utilizes Webpack with React. The purpose is to have a light base template that has only necessary modules. The modules included in this boilerplate are:
 
-* Dev Server with webpack-dev-server (https://github.com/webpack/webpack-dev-server)
+* Dev server with express (http://expressjs.com)
+* Hot module replacement with react-transform-hmr (https://github.com/gaearon/react-transform-hmr)
 * Routing with react-router (https://github.com/rackt/react-router)
 * Animation with velocity-react (https://github.com/twitter-fabric/velocity-react)
 * Device Detection with mobile-detect (https://github.com/hgoebl/mobile-detect.js)
+* Code linting with eslint (http://eslint.org)
 
-Depending on project, extra modules may be added using `npm install [module] --save-dev`. If you add any extra module, it is highly recommended to document it in this README so that others can re-use them easily in the future.
+###### Depending on project, extra modules may be added using `npm install [module] --save-dev`. If you add any extra module, it is highly recommended to document it in this README so that others can re-use them easily in the future.
 
-### Install and Run
+### How to use
 
 * Clone repository
 
@@ -17,27 +19,29 @@ Depending on project, extra modules may be added using `npm install [module] --s
 $ git clone git@git.assembla.com:tb-internal.webpack-boilerplate.git
 ```
 
-* Install modules and run server
+* Install modules and run dev server
 
 ```sh
 $ npm install
-$ npm run serve
+$ npm start
 ```
 
-### Build
+* Build
 
-* From bash terminal
 ```sh
 $ npm run build
 ```
 
-* From Windows cmd
-```sh
-$ npm run build-cmd
-```
+### Optimization
+
+In order to optimize javascript for adaptive websites, it was necessary to dynamically load javascript depending on the detected device. It is done by dynamically adding a script tag. `device.js` imports `mobile-detect` to determine the device from front-end, and creates a script tag with a javascript source that is relevant. Refer to `device.js` for details.
+
+### Inheritance
+
+For components that will have different views for different devices, we can utilize class inheritance to keep the common logic in parent class and to make appropriate views in child classes. States and methods from the parent are inherited to children, and they can be easily extended and overridden. Refer to `header.js`, `header-desktop.js` and `header-mobile.js` for details.
 
 ***
-
+***
 
 # Modules
 
@@ -45,39 +49,13 @@ This section contains modules that have been used in previous projects. Tricky e
 
 ___
 
-# webpack-dev-server
-
-https://github.com/webpack/webpack-dev-server
-
-### Installation
-
-```sh
-$ npm install webpack-dev-server --save-dev
-```
-
-### Running the server that can be accessed with IP address
-
-The recommendation from github is the following: `webpack-dev-server --content-base app/dist/`. HOWEVER, the script doesn't allow the website to be access from other devices in the network using IP address (i.e. if you want to view the website on your mobile device, you can't). A workaround is the following: `webpack-dev-server --host 0.0.0.0 --content-base app/dist/`. This code allows the local machine to access through `localhost:8080` and other devices to access through `[IP address]:8080`.
-
-### Watching source files for change and auto-refreshing browser
-
-I have used 'inline mode' that was explained in webpack documentation. It is to add `<script src='http://localhost:8080/webpack-dev-server.js'></script>` to html.
-
-___
-
 # react-router
 
 https://github.com/rackt/react-router
 
-### Installation
-
-```sh
-$ npm install react-router --save-dev
-```
-
 ### URL & History
 
-The boilerplate uses a class called createHashHistory as a default. It generates url with /#[sub-directory][hash-value], and is implemented in *app.js* by the following:
+The boilerplate uses a class called createHashHistory as a default. It generates url with /#[sub-directory][hash-value], and is implemented in `app.js` by the following:
 
 ```javascript
 import { createHashHistory } from 'history';
@@ -85,7 +63,7 @@ import { createHashHistory } from 'history';
 <Router history={createHashHistory()}>
 ```
 
-There is another class called createHistory. It generates url with /[sub-directory], and is implemented in *app.js* by the following:
+There is another class called createHistory. It generates url with /[sub-directory], and is implemented in `app.js` by the following:
 
 ```javascript
 import { createHistory } from 'history';
@@ -135,12 +113,6 @@ ___
 # velocity-react
 
 https://github.com/twitter-fabric/velocity-react
-
-### Installation
-
-```sh
-$ npm install velocity-react --save-dev
-```
 
 ### VelocityComponent
 
@@ -198,16 +170,4 @@ this.leaveAnimation = {
 </VelocityTransitionGroup>
 ```
 
-For a live example with complete code, please refer to *app/src/app.js*.
-
-___
-
-# mobile-detect
-
-https://github.com/hgoebl/mobile-detect.js
-
-### Installation
-
-```sh
-$ npm install mobile-detect --save-dev
-```
+For a live example with complete code, please refer to `app/src/app.js`.

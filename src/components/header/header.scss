@@ -1,0 +1,35 @@
+@import '../../styles/variables.scss';
+
+.header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	width: 100%;
+	height: $header_height;
+
+	.title {
+		float: left;
+		height: 100%;
+		line-height: $header_height;
+		padding: 0 15px;
+		text-transform: uppercase;
+	}
+
+	.links {
+		float: right;
+		height: 100%;
+	}
+
+	.link {
+		display: inline-block;
+		height: 100%;
+		padding: 0 15px;
+		line-height: $header_height;
+		text-transform: uppercase;
+
+		transition-property: background-color, color;
+		transition-duration: $duration;
+		transition-timing-function: $function;
+	}
+}

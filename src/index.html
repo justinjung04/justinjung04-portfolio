@@ -5,10 +5,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<!-- facebook  -->
-  <meta property="og:image" content=""/>
-  <meta property="og:title" content=""/>
-  <meta property="og:url" content=""/>
-  <meta property="og:site-name" content=""/>
+  <meta property="og:image" content="">
+  <meta property="og:title" content="">
+  <meta property="og:url" content="">
+  <meta property="og:site-name" content="">
 
   <!-- twitter  -->
   <meta name="twitter:card" content="">
@@ -39,11 +39,6 @@
 </head>
 <body>
 	<div id="app"></div>
-	
-	{% if (o.htmlWebpackPlugin.options.dev) { %}
-  <script src="http://localhost:8080/webpack-dev-server.js"></script>
-  {% } %}
-
-	<script src="app.js"></script>
+  <script src="bundle.device.js"></script>
 </body>
 </html>

@@ -2,12 +2,11 @@ import './app.scss';
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import MobileDetect from 'mobile-detect';
 import { Router, Route, IndexRoute } from 'react-router';
 import { VelocityTransitionGroup } from 'velocity-react';
 import { createHashHistory }  from 'history';
 
-import Header from './components/header/header';
+import Header from './components/header/header-mobile';
 import Home from './components/home/home';
 import Page1 from './components/page1/page1';
 
@@ -33,21 +32,14 @@ class App extends Component {
 	      translateY: ['5%', 0]
 	    }
 	  };
-
-	  let md = new MobileDetect(window.navigator.userAgent);
-	  this.device = ((md.mobile() && md.phone() != null) ? 'phone' : 'desktop');
-	}
-
-	componentDidMount() {
-		
 	}
 
 	render() {
 		return (
-			<div className={'section ' + this.device}>
-				<Header device={this.device} url={this.props.location.pathname} />
+			<div className='section mobile'>
+				<Header url={this.props.location.pathname} />
 				<VelocityTransitionGroup enter={this.enterAnimation} leave={this.leaveAnimation}>
-					{React.cloneElement(this.props.children, {key: this.props.location.pathname, url: this.props.location.pathname, device: this.device})}
+					{React.cloneElement(this.props.children, {key: this.props.location.pathname, url: this.props.location.pathname})}
 				</VelocityTransitionGroup>
 			</div>
 		);

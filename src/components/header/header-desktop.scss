@@ -1,0 +1,24 @@
+@import '../../styles/variables.scss';
+
+.header.desktop {
+	background-color: $dark_primary;
+
+	.title,
+	.link {
+		color: $white;
+	}
+
+	.link {
+		&:hover {
+			cursor: pointer;
+			background-color: $light_primary;
+			color: $dark_primary;
+		}
+
+		&.active {
+			cursor: default;
+			background-color: $light_primary;
+			color: $dark_primary;
+		}
+	}
+}
