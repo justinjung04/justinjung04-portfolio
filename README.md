@@ -9,7 +9,7 @@ This is a boilerplate that utilizes Webpack with React. The purpose is to have a
 * Device Detection with mobile-detect (https://github.com/hgoebl/mobile-detect.js)
 * Code linting with eslint (http://eslint.org)
 
-###### Depending on project, extra modules may be added using `npm install [module] --save-dev`. If you add any extra module, it is highly recommended to document it in this README so that others can re-use them easily in the future.
+##### Depending on project, extra modules may be added using `npm install [module] --save-dev`. If you add any extra module, it is highly recommended to document it in this README so that others can re-use them easily in the future.
 
 ### How to use
 
@@ -40,14 +40,9 @@ In order to optimize javascript for adaptive websites, it was necessary to dynam
 
 For components that will have different views for different devices, we can utilize class inheritance to keep the common logic in parent class and to make appropriate views in child classes. States and methods from the parent are inherited to children, and they can be easily extended and overridden. Refer to `header.js`, `header-desktop.js` and `header-mobile.js` for details.
 
-***
-***
-
 # Modules
 
 This section contains modules that have been used in previous projects. Tricky examples for each module are documented.
-
-___
 
 # react-router
 
@@ -108,7 +103,6 @@ export default class MyClass {
 }
 ReactMixin.onClass(MyClass, History);
 ```
-___
 
 # velocity-react
 
