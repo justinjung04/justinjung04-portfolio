@@ -7,14 +7,23 @@ import Signal from '../../signal/signal';
 export default class HeaderDesktop extends Header {
 	constructor() {
 		super();
-		this.signal = new Signal();
-		this.state = this.signal.getState();
 
-		this.signal.event.count.add((count) => {
+		this.signal = new Signal();
+		this.state = this.signal.state;
+
+		this.setCount = (count) => {
 			this.setState({
 				count
 			});
-		});
+		};
+	}
+
+	componentDidMount() {
+		this.signal.event.count.add(this.setCount);
+	}
+
+	componentWillUnmount() {
+		this.signal.event.count.remove(this.setCount);
 	}
 
 	render() {

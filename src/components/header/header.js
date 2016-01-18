@@ -19,7 +19,7 @@ export default class Header extends Component {
 
 	setBackgroundColor(backgroundColor) {
 		this.setState({
-			backgroundColor //object shorthand for backgroundColor: backgroundColor
+			backgroundColor
 		});
 	}
 }

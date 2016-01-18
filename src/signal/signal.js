@@ -1,18 +1,16 @@
 /*
 Easy to get states (global data)
-Easy to dispatch events (trigger)
 Easy to add eventhandler (subscribe)
+Easy to dispatch events (trigger)
 
-Layers of data, up to which layer should I be listening to? Not to a layer, but to a smallest unit.
-If smallest unit, no need to have a single big tree.
+Assign state to each component by, 
 
-In every component, 
-
-this.states = signal.getStates();
+this.signal = new Signal();
+this.states = this.signal.state;
 
 And subscribe by,
 
-signal.events.count.add((count) => {
+this.signal.event.count.add((count) => {
 	this.setState({
 		count
 	})	
@@ -20,16 +18,12 @@ signal.events.count.add((count) => {
 
 And dispatch by,
 
-signal.incrementCount();
-
-[Redux way]
-signal.thisFunction(actionObject)
-actionObject = type, parameters
-switch check for type, use Object.assign to modify states...
-
+this.signal.functionName();
 */
 
 import Signals from 'signals';
+import Count from './count';
+import Word from './word';
 
 let signalInstance = null;
 
@@ -40,29 +34,15 @@ export default class Signal {
 		}
 		signalInstance = this;
 
-		// States
-		this.state = {
-			count: 0
-		};
+		let allSignals = [new Count(), new Word()];
 
-		// Events for state update, used for subscribing
-		this.event = {
-			count: new Signals()
-		};
-	}
+		allSignals.map(signal => {
+			Object.assign(this, signal);
+		});
 
-	getState() {
-		return this.state;
-	}
-
-	// Events for each state, used for subscribing
-	incrementCount() {
-		this.state.count += 1;
-		this.event.count.dispatch(this.state.count);
-	}
-
-	decrementCount() {
-		this.state.count -= 1;
-		this.event.count.dispatch(this.state.count);
+		allSignals.map(signal => {
+			Object.assign(this.state, signal.state);
+			Object.assign(this.event, signal.event);
+		});
 	}
 }

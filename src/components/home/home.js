@@ -6,8 +6,9 @@ import Signal from '../../signal/signal';
 export default class Home extends Component {
 	constructor() {
 		super();
+
 		this.signal = new Signal();
-		this.state = this.signal.getState();
+		this.state = this.signal.state;
 
 		this.setCount = (count) => {
 			this.setState({
@@ -25,11 +26,11 @@ export default class Home extends Component {
 	}
 	
 	incrementCount() {
-		this.signal.incrementCount();
+		this.signal.incrementCount(this.signal);
 	}
 
 	decrementCount() {
-		this.signal.decrementCount();
+		this.signal.decrementCount(this.signal);
 	}
 	
 	render() {

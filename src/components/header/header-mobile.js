@@ -18,7 +18,7 @@ export default class HeaderMobile extends Header {
 
 	setColor(color) {
 		this.setState({
-			color //object shorthand for color: color
+			color
 		});
 	}
 
