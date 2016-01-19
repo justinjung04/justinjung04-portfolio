@@ -51,12 +51,12 @@ Motivated by Flux and Redux, this pattern is focused to achieve three main goals
 
 The steps involved behind are:
 
-* Save all possible states, events and actions in a single global object called `signal`
-* Every component gets the global states and save it to its own states `this.state = signal.state`. However, we will only respond to states that are relavant to the component by selectively subscribing to states of interest
-* To update a state of interest, a method from the signal object is called `signal.incrementCount()`
-* Inside the signal object, a state from the global object is modified, and triggers an event to broadcast the updated value `this.event.count.dispatch(this.state.count)`
-* A component subscribed to the state receives the broadcast and updates its own state `this.setState({ count })`
-* The state gets updated, the component gets re-rendered
+1. Save all possible states, events and actions in a single global object called `signal`
+2. Every component gets the global states and save it to its own states `this.state = signal.state`. However, we will only respond to states that are relavant to the component by selectively subscribing to states of interest
+3. To update a state of interest, a method from the signal object is called `signal.incrementCount()`
+4. Inside the signal object, a state from the global object is modified, and triggers an event to broadcast the updated value `this.event.count.dispatch(this.state.count)`
+5. A component subscribed to the state receives the broadcast and updates its own state `this.setState({ count })`
+6. The state gets updated, the component gets re-rendered
 
 Example code:
 
