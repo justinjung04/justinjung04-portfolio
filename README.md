@@ -14,20 +14,20 @@ This is a boilerplate that utilizes Webpack with React. The purpose is to have a
 
 ### How to use
 
-* Clone repository
+Clone repository
 
 ```sh
 $ git clone git@git.assembla.com:tb-internal.webpack-boilerplate.git
 ```
 
-* Install modules and run dev server
+Install modules and run dev server
 
 ```sh
 $ npm install
 $ npm start
 ```
 
-* Build
+Build
 
 ```sh
 $ npm run build
