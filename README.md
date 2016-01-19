@@ -66,7 +66,7 @@ import signal from '../../signal/signal'; //import signal instance
 
 export default class Page1 extends Component {
     constructor() {
-        this.states = signal.state; //get all states
+        this.state = signal.state; //get all states
         this.setPage1Word = (page1Word) => { this.setState({ page1Word }); }; //callback function when a state of interest updates
     }
 
