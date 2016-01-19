@@ -6,7 +6,8 @@ This is a boilerplate that utilizes Webpack with React. The purpose is to have a
 * Hot module replacement with react-transform-hmr (https://github.com/gaearon/react-transform-hmr)
 * Routing with react-router (https://github.com/rackt/react-router)
 * Animation with velocity-react (https://github.com/twitter-fabric/velocity-react)
-* Device Detection with mobile-detect (https://github.com/hgoebl/mobile-detect.js)
+* Device detection with mobile-detect (https://github.com/hgoebl/mobile-detect.js)
+* Central & unidirectional data flow with js-signals (https://github.com/millermedeiros/js-signals)
 * Code linting with eslint (http://eslint.org)
 
 ##### Depending on project, extra modules may be added using `npm install [module] --save-dev`. If you add any extra module, it is highly recommended to document it in this README so that others can re-use them easily in the future.
@@ -39,6 +40,105 @@ In order to optimize javascript for adaptive websites, it was necessary to dynam
 ### Inheritance
 
 For components that will have different views for different devices, we can utilize class inheritance to keep the common logic in parent class and to make appropriate views in child classes. States and methods from the parent are inherited to children, and they can be easily extended and overridden. Refer to `header.js`, `header-desktop.js` and `header-mobile.js` for details.
+
+### Central & unidirectional data flow
+
+Motivated by Flux and Redux, this pattern is focused to achieve three main goals:
+1. Easy to get data
+2. Easy to update data
+3. Easy to listen to data update
+
+The steps involved behind are:
+1. Save all possible states, events and actions in a single global object called `signal`
+2. Every component gets the global states and save it to its own states `this.state = signal.state`. However, we will only respond to states that are relavant to the component by selectively subscribing to states of interest
+3. To update a state of interest, a method from the signal object is called `signal.incrementCount()`
+4. Inside the signal object, a state from the global object is modified, and triggers an event to broadcast the updated value `this.event.count.dispatch(this.state.count)`
+5. A component subscribed to the state receives the broadcast and updates its own state `this.setState({ count })`
+6. The state gets updated, the component gets re-rendered
+
+Example code:
+
+```javascript
+import React, { Component } from 'react';
+import signal from '../../signal/signal'; //import
+
+export default class Example extends Component {
+    constructor() {
+        this.states = signal.state; //get all states
+        this.setCount = (count) => { this.setState({ count }); }; //callback function when a state of interest updates
+    }
+
+    componentDidMount() {
+        signal.event.count.add(this.setCount); //subscribe to a state of interest
+    }
+
+    componentWillUnmount() {
+        signal.event.count.remove(this.setCount); //unsubsribe to a state of interest
+    }
+
+    onClick() {
+        signal.incrementCount(); //dispatch an action to update a state of interest
+    }
+    ...
+}
+```
+
+Although we have a single object that contains everything, you can separate your signals into different groups and keep them in separate files such as `signal-global.js`, `signal-page1.js`. The global object `signal.js` will simply aggregate all the signal files and create a single point of entry. 
+
+```javascript
+import Signals from 'signals';
+
+export default class SignalPage1 {
+    constructor() {
+        this.state = {
+            page1Word: 'cool' //state
+        };
+
+        this.event = {
+            page1Word: new Signals() //signal to broadcast/receive. note name is maching with state for ease of use
+        };
+
+        //method to update the global state. broadcasts the updated state at the end
+        this.togglePage1Word = function() {
+            this.state.page1Word = (this.state.page1Word == 'cool' ) ? 'awesome' : 'cool';
+            this.event.page1Word.dispatch(this.state.page1Word);
+        };
+    }
+}
+```
+
+```javascript
+import SignalGlobal from './signal-global';
+import SignalPage1 from './signal-page1';
+
+let instance = null;
+
+class Signal {
+    constructor() {
+        if(instance) {
+            return instance; //singleton class
+        }
+        instance = this;
+
+        //list of all signals
+        let allSignals = [
+            new SignalGlobal(),
+            new SignalPage1()
+        ];
+
+        allSignals.map((signal) => {
+            Object.assign(this, signal); //aggregate all functions
+        });
+
+        allSignals.map((signal) => {
+            Object.assign(this.state, signal.state); //aggregate states
+            Object.assign(this.event, signal.event); //aggregate events
+        });
+    }
+}
+
+export default (new Signal());
+```
 
 # Modules
 

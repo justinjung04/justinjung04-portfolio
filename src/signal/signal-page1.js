@@ -10,9 +10,9 @@ export default class SignalPage1 {
 			page1Word: new Signals()
 		};
 
-		this.togglePage1Word = (signal) => {
-			signal.state.page1Word = (signal.state.page1Word == 'cool') ? 'awesome' : 'cool';
-			signal.event.page1Word.dispatch(signal.state.page1Word);
+		this.togglePage1Word = function() {
+			this.state.page1Word = (this.state.page1Word == 'cool' ) ? 'awesome' : 'cool';
+			this.event.page1Word.dispatch(this.state.page1Word);
 		};
 	}
 }

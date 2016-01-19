@@ -33,14 +33,14 @@ class App extends Component {
 	      translateY: ['5%', 0]
 	    },
 	    begin: () => {
-	    	signal.setUrl(signal, this.props.location.pathname);
+	    	signal.setUrl(this.props.location.pathname);
 	    }
 	  };
 	}
 
 	componentDidMount() {
-		signal.setDevice(signal, 'desktop');
-		signal.setUrl(signal, this.props.location.pathname);
+		signal.setDevice('desktop');
+		signal.setUrl(this.props.location.pathname);
 	}
 
 	render() {

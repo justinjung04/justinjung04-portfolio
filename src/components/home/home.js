@@ -26,8 +26,8 @@ export default class Home extends Component {
 				<img className='logo' src={require('../../assets/logo_tb.png')} />
 				<h1>Home Counter</h1>
 				<p>{this.state.count}</p>
-				<button onClick={() => signal.incrementCount(signal)}>+</button>
-				<button onClick={() => signal.decrementCount(signal)}>-</button>
+				<button onClick={() => signal.incrementCount()}>+</button>
+				<button onClick={() => signal.decrementCount()}>-</button>
 			</div>
 		);
 	}

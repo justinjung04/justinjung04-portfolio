@@ -14,24 +14,24 @@ export default class SignalGlobal {
 			count: new Signals()
 		};
 
-		this.setDevice = (signal, device) => {
-			signal.state.device = device;
-			signal.event.device.dispatch(signal.state.device);
+		this.setDevice = function(device) {
+			this.state.device = device;
+			this.event.device.dispatch(this.state.device);
 		};
 
-		this.setUrl = (signal, url) => {
-			signal.state.url = url;
-			signal.event.url.dispatch(signal.state.url);
+		this.setUrl = function(url) {
+			this.state.url = url;
+			this.event.url.dispatch(this.state.url);
 		};
 
-		this.incrementCount = (signal) => {
-			signal.state.count++;
-			signal.event.count.dispatch(signal.state.count);
+		this.incrementCount = function() {
+			this.state.count++;
+			this.event.count.dispatch(this.state.count);
 		};
 
-		this.decrementCount = (signal) => {
-			signal.state.count--;
-			signal.event.count.dispatch(signal.state.count);
+		this.decrementCount = function() {
+			this.state.count--;
+			this.event.count.dispatch(this.state.count);
 		};
 	}
 }

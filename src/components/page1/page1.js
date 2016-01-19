@@ -28,10 +28,10 @@ export default class Page1 extends Component {
 				<p>This is page 1</p>
 				<h1>Page 1 Counter</h1>
 				<p>{this.state.count}</p>
-				<button onClick={() => signal.incrementCount(signal)}>+</button>
-				<button onClick={() => signal.decrementCount(signal)}>-</button>
+				<button onClick={() => signal.incrementCount()}>+</button>
+				<button onClick={() => signal.decrementCount()}>-</button>
 				<h1>Justin is... <i>{this.state.page1Word}</i></h1>
-				<button onClick={() => signal.togglePage1Word(signal)}>toggle</button>
+				<button onClick={() => signal.togglePage1Word()}>toggle</button>
 			</div>
 		);
 	}
