@@ -22,19 +22,19 @@ this.signal.functionName();
 */
 
 import Signals from 'signals';
-import Count from './count';
-import Word from './word';
+import Global from './global';
+import Page1 from './page1';
 
-let signalInstance = null;
+let instance = null;
 
-export default class Signal {
+class Signal {
 	constructor() {
-		if(signalInstance) {
-			return signalInstance;
+		if(instance) {
+			return instance;
 		}
-		signalInstance = this;
+		instance = this;
 
-		let allSignals = [new Count(), new Word()];
+		let allSignals = [new Global(), new Page1()];
 
 		allSignals.map(signal => {
 			Object.assign(this, signal);
@@ -46,3 +46,5 @@ export default class Signal {
 		});
 	}
 }
+
+export default (new Signal());

@@ -1,15 +1,12 @@
 import './home.scss';
 
 import React, { Component } from 'react';
-import Signal from '../../signal/signal';
+import signal from '../../signal/signal';
 
 export default class Home extends Component {
 	constructor() {
 		super();
-
-		this.signal = new Signal();
-		this.state = this.signal.state;
-
+		this.state = signal.state;
 		this.setCount = (count) => {
 			this.setState({
 				count
@@ -18,31 +15,23 @@ export default class Home extends Component {
 	}
 
 	componentDidMount() {
-		this.signal.event.count.add(this.setCount);
+		signal.event.count.add(this.setCount);
 	}
 
 	componentWillUnmount() {
-		this.signal.event.count.remove(this.setCount);
-	}
-	
-	incrementCount() {
-		this.signal.incrementCount(this.signal);
-	}
-
-	decrementCount() {
-		this.signal.decrementCount(this.signal);
+		signal.event.count.remove(this.setCount);
 	}
 	
 	render() {
 		return (
-			<div className={'content home ' + this.props.device}>
+			<div className='content home'>
 				<h1>Home page</h1>
 				<p>This is a home page</p>
 				<img className='logo' src={require('../../assets/logo_tb.png')} />
 				<h1>Home Counter</h1>
 				<p>{this.state.count}</p>
-				<button onClick={this.incrementCount.bind(this)}>+</button>
-				<button onClick={this.decrementCount.bind(this)}>-</button>
+				<button onClick={() => signal.incrementCount(signal)}>+</button>
+				<button onClick={() => signal.decrementCount(signal)}>-</button>
 			</div>
 		);
 	}

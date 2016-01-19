@@ -29,10 +29,10 @@ export default class HeaderMobile extends Header {
 					mobile
 				</div>
 				<div className='links'>
-					<div className={'link' + (this.props.url == '/' ? ' active' : '')} onClick={this.onClick.bind(this, '/', '#000000', '#ffffff')}>
+					<div className={'link' + (this.state.url == '/' ? ' active' : '')} onClick={this.onClick.bind(this, '/', '#000000', '#ffffff')}>
 						home
 					</div>
-					<div className={'link' + (this.props.url == '/page1' ? ' active' : '')} onClick={this.onClick.bind(this, '/page1', '#ffffff', '#000000')}>
+					<div className={'link' + (this.state.url == '/page1' ? ' active' : '')} onClick={this.onClick.bind(this, '/page1', '#ffffff', '#000000')}>
 						page 1
 					</div>
 				</div>

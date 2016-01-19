@@ -1,13 +1,25 @@
 import Signals from 'signals';
 
-export default class Count {
+export default class Global {
 	constructor() {
 		this.state = {
+			device: '',
+			url: '',
 			count: 0
 		};
 
 		this.event = {
+			device: new Signals(),
+			url: new Signals(),
 			count: new Signals()
+		};
+
+		this.setDevice = (signal, device) => {
+			signal.state.device = device;
+		};
+
+		this.setUrl = (signal, url) => {
+			signal.state.url = url;
 		};
 
 		this.incrementCount = (signal) => {

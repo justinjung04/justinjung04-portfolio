@@ -2,15 +2,12 @@ import './header-desktop.scss';
 
 import React from 'react';
 import Header from './header';
-import Signal from '../../signal/signal';
+import signal from '../../signal/signal';
 
 export default class HeaderDesktop extends Header {
 	constructor() {
 		super();
-
-		this.signal = new Signal();
-		this.state = this.signal.state;
-
+		this.state = signal.state;
 		this.setCount = (count) => {
 			this.setState({
 				count
@@ -19,11 +16,11 @@ export default class HeaderDesktop extends Header {
 	}
 
 	componentDidMount() {
-		this.signal.event.count.add(this.setCount);
+		signal.event.count.add(this.setCount);
 	}
 
 	componentWillUnmount() {
-		this.signal.event.count.remove(this.setCount);
+		signal.event.count.remove(this.setCount);
 	}
 
 	render() {
@@ -33,10 +30,10 @@ export default class HeaderDesktop extends Header {
 					desktop {this.state.count}
 				</div>
 				<div className='links'>
-					<div className={'link' + (this.props.url == '/' ? ' active' : '')} onClick={this.onClick.bind(this, '/')}>
+					<div className={'link' + (this.state.url == '/' ? ' active' : '')} onClick={this.onClick.bind(this, '/')}>
 						home
 					</div>
-					<div className={'link' + (this.props.url == '/page1' ? ' active' : '')} onClick={this.onClick.bind(this, '/page1')}>
+					<div className={'link' + (this.state.url == '/page1' ? ' active' : '')} onClick={this.onClick.bind(this, '/page1')}>
 						page 1
 					</div>
 				</div>

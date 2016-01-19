@@ -2,10 +2,11 @@ import './app.scss';
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, IndexRoute } from 'react-router';
+import { Router, Route, IndexRoute, History } from 'react-router';
 import { VelocityTransitionGroup } from 'velocity-react';
 import { createHashHistory }  from 'history';
 
+import signal from './signal/signal';
 import Header from './components/header/header-desktop';
 import Home from './components/home/home';
 import Page1 from './components/page1/page1';
@@ -34,12 +35,17 @@ class App extends Component {
 	  };
 	}
 
+	componentDidMount() {
+		signal.setDevice(signal, 'desktop');
+	}
+
 	render() {
+		signal.setUrl(signal, this.props.location.pathname);
 		return (
 			<div className='section desktop'>
-				<Header url={this.props.location.pathname} />
+				<Header />
 				<VelocityTransitionGroup enter={this.enterAnimation} leave={this.leaveAnimation}>
-					{React.cloneElement(this.props.children, {key: this.props.location.pathname, url: this.props.location.pathname})}
+					{React.cloneElement(this.props.children, {key: this.props.location.pathname})}
 				</VelocityTransitionGroup>
 			</div>
 		);

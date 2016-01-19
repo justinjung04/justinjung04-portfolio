@@ -3,6 +3,7 @@ import './header.scss';
 import { Component } from 'react';
 import ReactMixin from 'react-mixin';
 import { History } from 'react-router';
+import signal from '../../signal/signal';
 
 export default class Header extends Component {
 	constructor() {
