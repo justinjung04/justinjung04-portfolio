@@ -1,6 +1,6 @@
 {
   "name": "webpack-boilerplate",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A boilerplate that utilizes Webpack with React",
   "repository": "git@github.com:justinjung90/webpack-boilerplate.git",
   "author": "Justin Jung",
