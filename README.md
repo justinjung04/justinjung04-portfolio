@@ -15,7 +15,7 @@ This is a boilerplate that utilizes Webpack with React. The purpose is to have a
 Clone repository
 
 ```sh
-$ git clone git@git.assembla.com:tb-internal.webpack-boilerplate.git
+$ git clone git@github.com:justinjung90/webpack-boilerplate.git
 ```
 
 Install modules and run dev server
@@ -33,11 +33,11 @@ $ npm run build
 
 ### Optimization
 
-In order to optimize javascript for adaptive websites, it was necessary to dynamically load javascript depending on the detected device. It is done by dynamically adding a script tag. `device.js` imports `mobile-detect` to determine the device from front-end, and creates a script tag with a javascript source that is relevant. Refer to `device.js` for details.
+In order to optimize javascript for adaptive websites, it was necessary to dynamically load javascript depending on the detected device. It is done by dynamically adding a script tag. `device.js` imports `mobile-detect` to determine the device from front-end, and creates a script tag with a javascript source that is relevant. Please refer to `device.js` for details.
 
 ### Inheritance
 
-For components that will have different views for different devices, we can utilize class inheritance to keep the common logic in parent class and to make appropriate views in child classes. States and methods from the parent are inherited to children, and they can be easily extended and overridden. Refer to `header.js`, `header-desktop.js` and `header-mobile.js` for details.
+For components that will have different views for different devices, we can utilize class inheritance to keep the common logic in parent class and to make appropriate views in child classes. States and methods from the parent are inherited to children, and they can be easily extended and overridden. Please refer to `header.js`, `header-desktop.js` and `header-mobile.js` for details.
 
 ### Central & unidirectional data flow
 
@@ -166,7 +166,7 @@ import { createHistory } from 'history';
 <Router history={createHistory()}>
 ```
 
-HOWEVER, there are some drawbacks. When a user wants to access the sub-directory directly, it will throw an error (i.e. navigation starting at `localhost:8080` would work, but refreshing at `localhost:8080/page1` wouldn't work) . This is because there is no rewrite on webpack-dev-server, and thus makes it very annoying when developing. If you want to use createHistory, it is recommended to add it before release along with url rewrite.
+HOWEVER, there are some drawbacks. When a user wants to access the sub-directory directly, it will throw an error (i.e. navigation starting at `localhost:3000` would work, but refreshing at `localhost:3000/page1` wouldn't work) . This is because there is no rewrite on webpack-dev-server, and thus makes it very annoying when developing. If you want to use createHistory, it is recommended to add it before release along with url rewrite.
 
 ###### *Side-note: URL rewrite*
 
@@ -179,8 +179,6 @@ RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
 RewriteRule ^ - [L]
 RewriteRule ^ /index.html [L]
 ```
-
-*If you know how to do url rewrite on node.js server, please add it here!*
 
 ### Navigating pages programatically
 
@@ -258,9 +256,9 @@ this.leaveAnimation = {
 };
 ...
 <VelocityTransitionGroup enter={this.enterAnimation} leave={this.leaveAnimation}>
-    // here, you must pass a unique key for each child as a property. window.location is a good example of a unique key
+    // here, you must pass a unique key for each child as a property. `this.props.location.pathname` is a good example of a unique key
     // you can also pass extra properties to children
-    {React.cloneElement(this.props.children, {key: window.location, extraProp: 'extraProp'})}
+    {React.cloneElement(this.props.children, {key: this.props.location.pathname, extraProp: 'extraProp'})}
 </VelocityTransitionGroup>
 ```
 
