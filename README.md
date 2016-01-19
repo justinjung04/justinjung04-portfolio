@@ -64,22 +64,22 @@ Example code:
 import React, { Component } from 'react';
 import signal from '../../signal/signal'; //import signal instance
 
-export default class Example extends Component {
+export default class Page1 extends Component {
     constructor() {
         this.states = signal.state; //get all states
-        this.setCount = (count) => { this.setState({ count }); }; //callback function when a state of interest updates
+        this.setPage1Word = (page1Word) => { this.setState({ page1Word }); }; //callback function when a state of interest updates
     }
 
     componentDidMount() {
-        signal.event.count.add(this.setCount); //subscribe to a state of interest
+        signal.event.page1Word.add(this.setPage1Word); //subscribe to a state of interest
     }
 
     componentWillUnmount() {
-        signal.event.count.remove(this.setCount); //unsubsribe to a state of interest
+        signal.event.page1Word.remove(this.setPage1Word); //unsubsribe to a state of interest
     }
 
     onClick() {
-        signal.incrementCount(); //dispatch an action to update a state of interest
+        signal.togglePage1Word(); //dispatch an action to update a state of interest
     }
     ...
 }
