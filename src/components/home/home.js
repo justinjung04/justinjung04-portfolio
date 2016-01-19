@@ -7,11 +7,7 @@ export default class Home extends Component {
 	constructor() {
 		super();
 		this.state = signal.state;
-		this.setCount = (count) => {
-			this.setState({
-				count
-			});
-		};
+		this.setCount = (count) => { this.setState({ count }); };
 	}
 
 	componentDidMount() {

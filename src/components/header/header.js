@@ -8,20 +8,20 @@ import signal from '../../signal/signal';
 export default class Header extends Component {
 	constructor() {
 		super();
-		this.state = {
-			backgroundColor: '#000000'
-		};
+		this.state = signal.state;
+		this.setUrl = (url) => { this.setState({ url }); };
 	}
 
-	onClick(url, backgroundColor) {
-		this.setBackgroundColor(backgroundColor);
+	componentDidMount() {
+		signal.event.url.add(this.setUrl);
+	}
+
+	componentWillUnmount() {
+		signal.event.url.remove(this.setUrl);
+	}
+
+	onClick(url) {
 		this.history.pushState(null, url);
-	}
-
-	setBackgroundColor(backgroundColor) {
-		this.setState({
-			backgroundColor
-		});
 	}
 }
 

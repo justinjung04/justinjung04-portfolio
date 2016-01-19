@@ -1,6 +1,6 @@
 import Signals from 'signals';
 
-export default class Global {
+export default class SignalGlobal {
 	constructor() {
 		this.state = {
 			device: '',
@@ -16,10 +16,12 @@ export default class Global {
 
 		this.setDevice = (signal, device) => {
 			signal.state.device = device;
+			signal.event.device.dispatch(signal.state.device);
 		};
 
 		this.setUrl = (signal, url) => {
 			signal.state.url = url;
+			signal.event.url.dispatch(signal.state.url);
 		};
 
 		this.incrementCount = (signal) => {

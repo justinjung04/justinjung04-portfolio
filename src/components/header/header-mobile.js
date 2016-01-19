@@ -6,33 +6,27 @@ import Header from './header';
 export default class HeaderMobile extends Header {
 	constructor() {
 		super();
-		this.state = {
-			color: '#000000'
-		};
 	}
 
-	onClick(url, backgroundColor, color) {
-		super.onClick(url, backgroundColor);
-		this.setColor(color);
+	componentDidMount() {
+		super.componentDidMount();
 	}
 
-	setColor(color) {
-		this.setState({
-			color
-		});
+	componentWillUnmount() {
+		super.componentWillUnmount();
 	}
 
 	render() {
 		return (
-			<div className='header mobile' style={{backgroundColor: this.state.backgroundColor, color: this.state.color}}>
+			<div className='header mobile'>
 				<div className='title'>
 					mobile
 				</div>
 				<div className='links'>
-					<div className={'link' + (this.state.url == '/' ? ' active' : '')} onClick={this.onClick.bind(this, '/', '#000000', '#ffffff')}>
+					<div className={'link' + (this.state.url == '/' ? ' active' : '')} onClick={() => super.onClick('/')}>
 						home
 					</div>
-					<div className={'link' + (this.state.url == '/page1' ? ' active' : '')} onClick={this.onClick.bind(this, '/page1', '#ffffff', '#000000')}>
+					<div className={'link' + (this.state.url == '/page1' ? ' active' : '')} onClick={() => super.onClick('/page1')}>
 						page 1
 					</div>
 				</div>

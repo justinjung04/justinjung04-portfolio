@@ -3,27 +3,29 @@ Easy to get states (global data)
 Easy to add eventhandler (subscribe)
 Easy to dispatch events (trigger)
 
-Assign state to each component by, 
+import signal from '../../signal/signal'; //import
 
-this.signal = new Signal();
-this.states = this.signal.state;
+constructor() {
+	this.states = signal.state;	//get all states
+	this.setCount = (count) => { this.setState({ count }); }; //callback function when a state of interest updates
+}
 
-And subscribe by,
+componentDidMount() {
+	signal.event.count.add(this.setCount); //subscribe to a state of interest
+}
 
-this.signal.event.count.add((count) => {
-	this.setState({
-		count
-	})	
-});
+componentWillUnmount() {
+	signal.event.count.remove(this.setCount); //unsubsribe to a state of interest
+}
 
-And dispatch by,
-
-this.signal.functionName();
+onClick() {
+	signal.incrementCount(signal); //dispatch an action to update a state of interest
+}
 */
 
 import Signals from 'signals';
-import Global from './global';
-import Page1 from './page1';
+import SignalGlobal from './signal-global';
+import SignalPage1 from './signal-page1';
 
 let instance = null;
 
@@ -34,7 +36,10 @@ class Signal {
 		}
 		instance = this;
 
-		let allSignals = [new Global(), new Page1()];
+		let allSignals = [
+			new SignalGlobal(),
+			new SignalPage1()
+		];
 
 		allSignals.map(signal => {
 			Object.assign(this, signal);

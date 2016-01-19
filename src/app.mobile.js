@@ -7,7 +7,7 @@ import { VelocityTransitionGroup } from 'velocity-react';
 import { createHashHistory }  from 'history';
 
 import signal from './signal/signal';
-import Header from './components/header/header-mobile';
+import HeaderMobile from './components/header/header-mobile';
 import Home from './components/home/home';
 import Page1 from './components/page1/page1';
 
@@ -31,19 +31,22 @@ class App extends Component {
 	    animation: {
 	      opacity: [0, 1],
 	      translateY: ['5%', 0]
+	    },
+	    begin: () => {
+	    	signal.setUrl(signal, this.props.location.pathname);
 	    }
 	  };
 	}
 
 	componentDidMount() {
 		signal.setDevice(signal, 'mobile');
+		signal.setUrl(signal, this.props.location.pathname);
 	}
 
 	render() {
-		signal.setUrl(signal, this.props.location.pathname);
 		return (
 			<div className='section mobile'>
-				<Header />
+				<HeaderMobile />
 				<VelocityTransitionGroup enter={this.enterAnimation} leave={this.leaveAnimation}>
 					{React.cloneElement(this.props.children, {key: this.props.location.pathname})}
 				</VelocityTransitionGroup>

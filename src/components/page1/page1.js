@@ -7,26 +7,18 @@ export default class Page1 extends Component {
 	constructor() {
 		super();
 		this.state = signal.state;
-		this.setCount = (count) => {
-			this.setState({
-				count
-			});
-		};
-		this.setWord = (word) => {
-			this.setState({
-				word
-			});
-		}
+		this.setCount = (count) => { this.setState({ count }); };		
+		this.setPage1Word = (page1Word) => { this.setState({ page1Word }); };
 	}
 
 	componentDidMount() {
 		signal.event.count.add(this.setCount);
-		signal.event.word.add(this.setWord);
+		signal.event.page1Word.add(this.setPage1Word);
 	}
 
 	componentWillUnmount() {
 		signal.event.count.remove(this.setCount);
-		signal.event.word.remove(this.setWord);
+		signal.event.page1Word.remove(this.setPage1Word);
 	}
 
 	render() {
@@ -38,8 +30,8 @@ export default class Page1 extends Component {
 				<p>{this.state.count}</p>
 				<button onClick={() => signal.incrementCount(signal)}>+</button>
 				<button onClick={() => signal.decrementCount(signal)}>-</button>
-				<h1>Justin is... <i>{this.state.word}</i></h1>
-				<button onClick={() => signal.toggleWord(signal)}>toggle</button>
+				<h1>Justin is... <i>{this.state.page1Word}</i></h1>
+				<button onClick={() => signal.togglePage1Word(signal)}>toggle</button>
 			</div>
 		);
 	}
