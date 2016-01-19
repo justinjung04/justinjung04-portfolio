@@ -262,4 +262,4 @@ this.leaveAnimation = {
 </VelocityTransitionGroup>
 ```
 
-For a live example with complete code, please refer to `app/src/app.js`.
+For a live example with complete code, please refer to `app.js`.
