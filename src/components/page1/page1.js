@@ -7,7 +7,7 @@ export default class Page1 extends Component {
 	constructor() {
 		super();
 		this.state = signal.state;
-		this.setCount = (count) => { this.setState({ count }); };		
+		this.setCount = (count) => { this.setState({ count }); };
 		this.setPage1Word = (page1Word) => { this.setState({ page1Word }); };
 	}
 
