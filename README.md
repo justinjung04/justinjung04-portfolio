@@ -10,8 +10,6 @@ This is a boilerplate that utilizes Webpack with React. The purpose is to have a
 * Central & unidirectional data flow with js-signals (https://github.com/millermedeiros/js-signals)
 * Code linting with eslint (http://eslint.org)
 
-##### Depending on project, extra modules may be added using `npm install [module] --save-dev`. If you add any extra module, it is highly recommended to document it in this README so that others can re-use them easily in the future.
-
 ### How to use
 
 Clone repository
