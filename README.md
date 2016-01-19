@@ -44,11 +44,13 @@ For components that will have different views for different devices, we can util
 ### Central & unidirectional data flow
 
 Motivated by Flux and Redux, this pattern is focused to achieve three main goals:
-* Easy to get data
-* Easy to update data
-* Easy to listen to data update
+
+1. Easy to get data
+2. Easy to update data
+3. Easy to listen to data update
 
 The steps involved behind are:
+
 * Save all possible states, events and actions in a single global object called `signal`
 * Every component gets the global states and save it to its own states `this.state = signal.state`. However, we will only respond to states that are relavant to the component by selectively subscribing to states of interest
 * To update a state of interest, a method from the signal object is called `signal.incrementCount()`
@@ -60,7 +62,7 @@ Example code:
 
 ```javascript
 import React, { Component } from 'react';
-import signal from '../../signal/signal'; //import
+import signal from '../../signal/signal'; //import signal instance
 
 export default class Example extends Component {
     constructor() {
