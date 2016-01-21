@@ -6,23 +6,22 @@ let instance = null;
 class Signal {
   constructor() {
     if(instance) {
-      return instance; //singleton class
+      return instance;
     }
     instance = this;
 
-    //list of all signals
-    let allSignals = [
+    let signals = [
       new SignalGlobal(),
       new SignalPage1()
     ];
 
-    allSignals.map((signal) => {
-      Object.assign(this, signal); //aggregate all functions
+    signals.map((signal) => {
+      Object.assign(this, signal);
     });
 
-  	allSignals.map((signal) => {
-      Object.assign(this.state, signal.state); //aggregate states
-      Object.assign(this.event, signal.event); //aggregate events
+  	signals.map((signal) => {
+      Object.assign(this.state, signal.state);
+      Object.assign(this.event, signal.event);
     });
   }
 }
