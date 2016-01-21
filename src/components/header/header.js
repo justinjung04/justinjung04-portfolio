@@ -9,7 +9,7 @@ export default class Header extends Component {
 	constructor() {
 		super();
 		this.state = signal.state;
-		this.setUrl = (url) => { this.setState({ url }); };
+		this.setUrl = (url) => this.setState({ url });
 	}
 
 	componentDidMount() {

@@ -7,7 +7,7 @@ import signal from '../../signal/signal';
 export default class HeaderDesktop extends Header {
 	constructor() {
 		super();
-		this.setCount = (count) => { this.setState({ count }); };
+		this.setCount = (count) => this.setState({ count });
 	}
 
 	componentDidMount() {
