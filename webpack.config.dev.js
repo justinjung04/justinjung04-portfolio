@@ -3,7 +3,7 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: {
-    device: './src/app.device.js',
+    device: './src/device.js',
     desktop: [
       'eventsource-polyfill', // necessary for hot reloading with IE
       'webpack-hot-middleware/client',

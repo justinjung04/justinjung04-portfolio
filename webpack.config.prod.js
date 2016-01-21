@@ -5,7 +5,7 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
-    device: './src/app.device.js',
+    device: './src/device.js',
     desktop: './src/app.desktop.js',
     mobile: './src/app.mobile.js'
   },
