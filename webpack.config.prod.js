@@ -36,8 +36,12 @@ module.exports = {
         }),
         new CopyWebpackPlugin([
             {
-                from: path.join(__dirname, '/src/files'),
-                to: '/'
+                from: path.join(__dirname, '/src/assets/'),
+                to: './assets/'
+            },
+            {
+                from: path.join(__dirname, '/src/.htaccess'),
+                to: './'
             }
         ])
     ],
@@ -45,9 +49,7 @@ module.exports = {
         loaders: [
             { test: /\.jsx?/, loader: 'babel', include: path.join(__dirname, 'src') },
             { test: /\.css$/, loader: 'style!css' },
-            { test: /\.scss/, loader: 'style!css!sass' },
-            { test: /\.(png|jpg|woff|ttf)/, loader: 'url', query: { limit: '10000', name: '/assets/[name].[hash].[ext]' } },
-            { test: /\.(svg|mp4|webm)/, loader: 'file', query: { limit: '10000', name: '/assets/[name].[hash].[ext]' } }
+            { test: /\.scss/, loader: 'style!css!sass' }
         ]
     }
 };
