@@ -2,9 +2,8 @@ import './app.scss';
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, IndexRoute } from 'react-router';
+import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { VelocityTransitionGroup } from 'velocity-react';
-import { createHashHistory }  from 'history';
 
 import signal from './signal/signal';
 import HeaderMobile from './components/header/header-mobile';
@@ -18,24 +17,24 @@ class App extends Component {
 		this.enterAnimation = {
 			duration: 500,
 			delay: 500,
-	    easing: 'ease',
-	    animation: {
-	      opacity: [1, 0],
-	      translateY: [0, '5%']
-	    }
-	  };
+			easing: 'ease',
+			animation: {
+				opacity: [1, 0],
+				translateY: [0, '5%']
+			}
+		};
 
-	  this.leaveAnimation = {
-	    duration: 500,
-	    easing: 'ease',
-	    animation: {
-	      opacity: [0, 1],
-	      translateY: ['5%', 0]
-	    },
-	    begin: () => {
-	    	signal.setUrl(this.props.location.pathname);
-	    }
-	  };
+		this.leaveAnimation = {
+			duration: 500,
+			easing: 'ease',
+			animation: {
+				opacity: [0, 1],
+				translateY: ['5%', 0]
+			},
+			begin: () => {
+				signal.setUrl(this.props.location.pathname);
+			}
+		};
 	}
 
 	componentDidMount() {
@@ -56,10 +55,10 @@ class App extends Component {
 };
 
 ReactDOM.render((
-	<Router history={createHashHistory()}>
-    <Route path='/' component={App}>
-      <IndexRoute component={Home} />
-      <Route path='page1' component={Page1} />
-    </Route>
-  </Router>
+	<Router history={browserHistory}>
+		<Route path='/' component={App}>
+			<IndexRoute component={Home} />
+			<Route path='page1' component={Page1} />
+		</Route>
+	</Router>
 ), document.getElementById('app'));

@@ -20,6 +20,10 @@ export default class HeaderDesktop extends Header {
 		signal.event.count.remove(this.setCount);
 	}
 
+	onClick(url) {
+		super.onClick(url);
+	}
+
 	render() {
 		return (
 			<div className='header desktop'>
@@ -27,10 +31,10 @@ export default class HeaderDesktop extends Header {
 					desktop {this.state.count}
 				</div>
 				<div className='links'>
-					<div className={'link' + (this.state.url == '/' ? ' active' : '')} onClick={() => super.onClick('/')}>
+					<div className={'link' + (this.state.url == '/' ? ' active' : '')} onClick={this.onClick.bind(this, '/')}>
 						home
 					</div>
-					<div className={'link' + (this.state.url == '/page1' ? ' active' : '')} onClick={() => super.onClick('/page1')}>
+					<div className={'link' + (this.state.url == '/page1' ? ' active' : '')} onClick={this.onClick.bind(this, '/page1')}>
 						page 1
 					</div>
 				</div>

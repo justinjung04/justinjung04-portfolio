@@ -1,8 +1,7 @@
 import './header.scss';
 
 import { Component } from 'react';
-import ReactMixin from 'react-mixin';
-import { History } from 'react-router';
+import { browserHistory } from 'react-router';
 import signal from '../../signal/signal';
 
 export default class Header extends Component {
@@ -21,8 +20,6 @@ export default class Header extends Component {
 	}
 
 	onClick(url) {
-		this.history.pushState(null, url);
+		browserHistory.push(url);
 	}
 }
-
-ReactMixin.onClass(Header, History);
