@@ -21,6 +21,18 @@ export default class Page1 extends Component {
 		signal.event.page1Word.remove(this.setPage1Word);
 	}
 
+	incrementCount() {
+		signal.incrementCount();
+	}
+
+	decrementCount() {
+		signal.decrementCount();
+	}
+
+	togglePage1Word() {
+		signal.togglePage1Word();
+	}
+
 	render() {
 		return (
 			<div className='content page1'>
@@ -28,10 +40,10 @@ export default class Page1 extends Component {
 				<p>This is page 1</p>
 				<h1>Page 1 Counter</h1>
 				<p>{this.state.count}</p>
-				<button onClick={() => signal.incrementCount()}>+</button>
-				<button onClick={() => signal.decrementCount()}>-</button>
+				<button onClick={this.incrementCount}>+</button>
+				<button onClick={this.decrementCount}>-</button>
 				<h1>Justin is... <i>{this.state.page1Word}</i></h1>
-				<button onClick={() => signal.togglePage1Word()}>toggle</button>
+				<button onClick={this.togglePage1Word}>toggle</button>
 			</div>
 		);
 	}
