@@ -1,7 +1,8 @@
-var path = require('path');
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const autoprefixer = require('autoprefixer');
 
 module.exports = {
     entry: {
@@ -48,7 +49,10 @@ module.exports = {
     module: {
         loaders: [
             { test: /\.jsx?/, loader: 'babel', include: path.join(__dirname, 'src') },
-            { test: /\.scss/, loader: 'style!css!sass' }
+            { test: /\.scss/, loader: 'style!css!sass!postcss' }
         ]
+    },
+    postcss: function() {
+        return [autoprefixer];
     }
 };

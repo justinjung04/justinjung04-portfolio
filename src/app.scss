@@ -1,4 +1,3 @@
-@import './styles/mixins.scss';
 @import './styles/variables.scss';
 
 html, body, #app {
@@ -6,6 +5,7 @@ html, body, #app {
 	height: 100%;
 	margin: 0;
 	font-size: $font_general;
+	font-family: 'Lato', sans-serif;
 }
 
 div {
@@ -45,7 +45,7 @@ h5 {
 		left: 0;
 		width: 100%;
 		height: 100%;
-		padding: 20px;
-		top: $header_height;
+		// padding: 20px;
+		// top: $header_height;
 	}
 }
