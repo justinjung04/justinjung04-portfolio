@@ -34,9 +34,9 @@ $list-col-title-width: 35%;
 $fade-left: calc(50% - 5px);
 $fade-top: calc(50% + #{$audio-height} + 18px);
 $fade-transform: translate(-50%, -50%);
-$fade-width: calc(#{$list-width} - 30px);
-$fade-max-width: calc(#{$list-max-width} - 30px);
-$fade-min-width: calc(#{$list-min-width} - 30px);
+$fade-width: calc(#{$audio-width} - 40px);
+$fade-max-width: calc(#{$audio-max-width} - 40px);
+$fade-min-width: calc(#{$audio-min-width} - 40px);
 $fade-height: $list-height;
 
 @import './meari.scss';

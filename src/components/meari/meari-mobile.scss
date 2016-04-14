@@ -34,7 +34,7 @@ $list-col-title-width: 38%;
 $fade-left: 0;
 $fade-top: calc(50% + #{$audio-height} + 18px);
 $fade-transform: translate(0, -50%);
-$fade-width: calc(#{$list-width} - 8px);
+$fade-width: calc(#{$audio-width} - 8px);
 $fade-max-width: none;
 $fade-min-width: 0;
 $fade-height: $list-height;

@@ -5,10 +5,9 @@ export default class Meari extends Component {
 	constructor() {
 		super();
 		this.state = {
-			currentTrack: 0,
-			currentVoice: '',
-			currentSrc: '',
-			fileName: ''
+			track: 0,
+			voice: '',
+			src: ''
 		};
 	}
 
@@ -44,17 +43,11 @@ export default class Meari extends Component {
 		src += '.mp3';
 		this.refs.music.src = src;
 		this.refs.music.play();
-
-		this.setState({
-			currentTrack: track,
-			currentVoice: voice,
-			currentSrc: src,
-			fileName: src.split('/')[3]
-		});
+		this.setState({ track, voice, src });
 	}
 
 	onClickDownload() {
-		switch(this.state.currentVoice) {
+		switch(this.state.voice) {
 			case 'soprano':
 				window.ga('send', 'event', 'Soprano', 'download');
 				break;
@@ -72,28 +65,28 @@ export default class Meari extends Component {
 		}
 	}
 
-	tracks() {
+	getList() {
 		const list = hymns.map((item, key) => {
             return (
-                <li key={key} className={(this.state.currentTrack == item.track) ? 'active-track' : ''}>
+                <li key={key} className={(this.state.track == item.track) ? 'active-track' : ''}>
                 	<i className='col fa fa-play'></i>
                 	<span className='col number' onClick={this.setTrack.bind(this, item.track, 'all')}>{item.track}</span>
                 	<span className='col title' onClick={this.setTrack.bind(this, item.track, 'all')}>{item.title}</span>
-                	<span className={`col ${(this.state.currentVoice == 'all') ? 'active-voice' : ''}`} onClick={this.setTrack.bind(this, item.track, 'all')}>All</span>
+                	<span className={`col ${(this.state.voice == 'all') ? 'active-voice' : ''}`} onClick={this.setTrack.bind(this, item.track, 'all')}>All</span>
                 	{(item.voices.indexOf('soprano') > -1)
-                		? <span className={`col ${(this.state.currentVoice == 'soprano') ? 'active-voice' : ''}`} onClick={this.setTrack.bind(this, item.track, 'soprano')}>Soprano</span>
+                		? <span className={`col ${(this.state.voice == 'soprano') ? 'active-voice' : ''}`} onClick={this.setTrack.bind(this, item.track, 'soprano')}>Soprano</span>
                 		: <span className='col disabled'>Soprano</span>
                 	}
                 	{(item.voices.indexOf('alto') > -1)
-                		? <span className={`col ${(this.state.currentVoice == 'alto') ? 'active-voice' : ''}`} onClick={this.setTrack.bind(this, item.track, 'alto')}>Alto</span>
+                		? <span className={`col ${(this.state.voice == 'alto') ? 'active-voice' : ''}`} onClick={this.setTrack.bind(this, item.track, 'alto')}>Alto</span>
                 		: <span className='col disabled'>Alto</span>
                 	}
                 	{(item.voices.indexOf('tenor') > -1)
-                		? <span className={`col ${(this.state.currentVoice == 'tenor') ? 'active-voice' : ''}`} onClick={this.setTrack.bind(this, item.track, 'tenor')}>Tenor</span>
+                		? <span className={`col ${(this.state.voice == 'tenor') ? 'active-voice' : ''}`} onClick={this.setTrack.bind(this, item.track, 'tenor')}>Tenor</span>
                 		: <span className='col disabled'>Tenor</span>
                 	}
                 	{(item.voices.indexOf('bass') > -1)
-                		? <span className={`col ${(this.state.currentVoice == 'bass') ? 'active-voice' : ''}`} onClick={this.setTrack.bind(this, item.track, 'bass')}>Bass</span>
+                		? <span className={`col ${(this.state.voice == 'bass') ? 'active-voice' : ''}`} onClick={this.setTrack.bind(this, item.track, 'bass')}>Bass</span>
                 		: <span className='col disabled'>Bass</span>
                 	}
                 </li>
@@ -110,11 +103,11 @@ export default class Meari extends Component {
 	render() {
 		return (
 			<div className='content meari'>
-				{(this.state.currentSrc == '')
+				{(this.state.src == '')
 					? <div className='btn-download disabled'>
 						PLEASE SELECT A SONG
 					  </div>
-					: <a className='btn-download' href={this.state.currentSrc} download={this.state.fileName} onClick={this.onClickDownload.bind(this)}>
+					: <a className='btn-download' href={this.state.src} download={this.state.src.split('/')[3]} onClick={this.onClickDownload.bind(this)}>
 						<span className='fa fa-download'></span>
 						DOWNLOAD
 					  </a>
@@ -123,7 +116,7 @@ export default class Meari extends Component {
 					<source src='' type='audio/mp3' />
 				</audio>
 				<div className='list'>
-					{this.tracks()}
+					{this.getList()}
 				</div>
 				<div className='fade'></div>
 			</div>
