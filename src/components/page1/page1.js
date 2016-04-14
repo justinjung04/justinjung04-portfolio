@@ -14,6 +14,8 @@ export default class Page1 extends Component {
 	componentDidMount() {
 		signal.event.count.add(this.setCount);
 		signal.event.page1Word.add(this.setPage1Word);
+		window.ga('set', 'page', '/page1');
+		window.ga('send', 'pageview');
 	}
 
 	componentWillUnmount() {
@@ -23,10 +25,12 @@ export default class Page1 extends Component {
 
 	incrementCount() {
 		signal.incrementCount();
+		window.ga('send', 'event', 'Counter', 'increment');
 	}
 
 	decrementCount() {
 		signal.decrementCount();
+		window.ga('send', 'event', 'Counter', 'decrement');
 	}
 
 	togglePage1Word() {

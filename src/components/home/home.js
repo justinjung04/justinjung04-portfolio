@@ -1,29 +1,15 @@
 import './home.scss';
 
 import React, { Component } from 'react';
-import signal from '../../signal/signal';
 
 export default class Home extends Component {
 	constructor() {
 		super();
-		this.state = signal.state;
-		this.setCount = (count) => this.setState({ count });
 	}
 
 	componentDidMount() {
-		signal.event.count.add(this.setCount);
-	}
-
-	componentWillUnmount() {
-		signal.event.count.remove(this.setCount);
-	}
-
-	incrementCount() {
-		signal.incrementCount();
-	}
-
-	decrementCount() {
-		signal.decrementCount();
+		window.ga('set', 'page', '/');
+		window.ga('send', 'pageview');
 	}
 	
 	render() {

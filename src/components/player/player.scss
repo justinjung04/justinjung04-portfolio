@@ -1,0 +1,43 @@
+.player {
+	width: 300px;
+	height: 300px;
+	border: 1px solid grey;
+	display: flex;
+	flex-direction: column;
+
+	.black {
+		width: 100px;
+		height: 100px;
+		background-color: black;
+		border: 1px solid grey;
+	}
+
+	.white {
+		width: 100px;
+		height: 100px;
+		background-color: white;
+		border: 1px solid grey;	
+	}
+
+	.transparent {
+		width: 0;
+		height: 100px;
+		background-color: transparent;
+	}
+
+	.name {
+		text-transform: uppercase;
+		font-weight: bold;
+	}
+
+	.one {
+		flex-grow: 1;
+	}
+
+	.three {
+		flex-grow: 3;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+}

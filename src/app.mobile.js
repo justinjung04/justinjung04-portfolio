@@ -5,10 +5,9 @@ import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { VelocityTransitionGroup } from 'velocity-react';
 
-import signal from './signal/signal';
-// import HeaderMobile from './components/header/header-mobile';
 import Home from './components/home/home';
-// import Page1 from './components/page1/page1';
+import Meari from './components/meari/meari-mobile';
+import Orientation from './components/orientation/orientation';
 
 class App extends Component {
 	constructor() {
@@ -32,23 +31,18 @@ class App extends Component {
 				translateY: ['5%', 0]
 			},
 			begin: () => {
-				signal.setUrl(this.props.location.pathname);
+
 			}
 		};
-	}
-
-	componentDidMount() {
-		signal.setDevice('mobile');
-		signal.setUrl(this.props.location.pathname);
 	}
 
 	render() {
 		return (
 			<div className='section mobile'>
-				{/*<HeaderMobile />*/}
 				<VelocityTransitionGroup enter={this.enterAnimation} leave={this.leaveAnimation}>
 					{React.cloneElement(this.props.children, {key: this.props.location.pathname})}
 				</VelocityTransitionGroup>
+				<Orientation />
 			</div>
 		);
 	}
@@ -58,7 +52,7 @@ ReactDOM.render((
 	<Router history={browserHistory}>
 		<Route path='/' component={App}>
 			<IndexRoute component={Home} />
-			{/*<Route path='page1' component={Page1} />*/}
+			<Route path='meari' component={Meari} />
 		</Route>
 	</Router>
 ), document.getElementById('app'));
