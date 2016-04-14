@@ -2,28 +2,30 @@ $background-color: #ddf9e9;
 $color: #aec6cf;
 $dark-color: #526972;
 
-$btn-download-margin: 0 0 40px 0;
-$btn-download-padding: 10px;
-$btn-download-border: 3px solid $color;
-$btn-download-radius: 5px;
-$btn-download-font-size: 17px;
-$btn-download-color: $color;
+$btn-margin: 0 0 40px 0;
+$btn-padding: 10px;
+$btn-border: 3px solid $color;
+$btn-radius: 5px;
+$btn-font-size: 17px;
+$btn-color: $color;
 
 $btn-download-fa-margin: 0 8px 0 0;
 
 $audio-width: 55%;
 $audio-max-width: 800px;
 $audio-min-width: 700px;
-$audio-height: 50px;
+$audio-height: 120px;
 
 $list-width: calc(#{$audio-width} - 10px);
 $list-max-width: calc(#{$audio-max-width} - 10px);
 $list-min-width: calc(#{$audio-min-width} - 10px);
-$list-height: 50%;
-$list-padding: 0 10px 10% 20px;
+$list-height: 47%;
 $list-font-size: 17px;
 
+$list-ul-padding: 0 10px 25% 10px;
+
 $list-col-height: 50px;
+$list-col-padding: 0 2%;
 
 $list-col-fa-width: 7%;
 
@@ -31,12 +33,6 @@ $list-col-number-width: 8%;
 
 $list-col-title-width: 35%;
 
-$fade-left: calc(50% - 5px);
-$fade-top: calc(50% + #{$audio-height} + 18px);
-$fade-transform: translate(-50%, -50%);
-$fade-width: calc(#{$audio-width} - 40px);
-$fade-max-width: calc(#{$audio-max-width} - 40px);
-$fade-min-width: calc(#{$audio-min-width} - 40px);
-$fade-height: $list-height;
+$fade-width: calc(100% - 30px);
 
 @import './meari.scss';

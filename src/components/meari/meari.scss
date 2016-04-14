@@ -5,41 +5,40 @@
 	align-items: center;
 	background-color: $background-color;
 	color: $color;
-	
-	.btn-download {
-		margin: $btn-download-margin;
-		padding: $btn-download-padding;
-		border: $btn-download-border;
-		border-radius: $btn-download-radius;
-		font-size: $btn-download-font-size;
-		color: $btn-download-color;
-		cursor: pointer;
 
-		&.disabled {
-			cursor: default;
-		}
-
-		.fa {
-			margin: $btn-download-fa-margin;
-		}
-	}
-
-	audio {
+	.control {
 		z-index: 1;
 		width: $audio-width;
 		max-width: $audio-max-width;
 		min-width: $audio-min-width;
 		height: $audio-height;
+
+		.btn {
+			margin: $btn-margin;
+			padding: $btn-padding;
+			border: $btn-border;
+			border-radius: $btn-radius;
+			font-size: $btn-font-size;
+			color: $btn-color;
+			cursor: pointer;
+
+			&.disabled {
+				cursor: default;
+			}
+
+			&.download.fa {
+				margin: $btn-download-fa-margin;
+			}
+		}
 	}
 
 	.list {
+		position: relative;
 		width: $list-width;
 		max-width: $list-max-width;
 		min-width: $list-min-width;
 		height: $list-height;
-		padding: $list-padding;
 		font-size: $list-font-size;
-		overflow: auto;
 		background-color: rgb(255, 255, 255);
 		box-shadow: rgba(255, 255, 255, 0.8) 2px 2px,
 					rgba(255, 255, 255, 0.6) 4px 4px,
@@ -71,14 +70,19 @@
 		}
 		
 		ul {
-			padding: 0;
+			box-sizing: border-box;
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: $list-ul-padding;
 			list-style-type: none;
+			overflow: auto;
 		}
 
 		.col {
 			height: $list-col-height;
 			line-height: $list-col-height;
-			padding: 0 1%;
+			padding: $list-col-padding;
 			cursor: pointer;
 
 			&.disabled {
@@ -117,13 +121,10 @@
 
 	.fade {
 		position: absolute;
-		left: $fade-left;
-		top: $fade-top;
-		transform: $fade-transform;
+		left: 0;
+		bottom: 0;
 		width: $fade-width;
-		max-width: $fade-max-width;
-		min-width: $fade-min-width;
-		height: $fade-height;
+		height: 100%;
 		background: linear-gradient(rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0) 70%, rgba(255, 255, 255, 1) 100%);
 		pointer-events: none;
 	}

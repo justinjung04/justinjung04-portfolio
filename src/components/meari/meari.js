@@ -103,22 +103,28 @@ export default class Meari extends Component {
 	render() {
 		return (
 			<div className='content meari'>
-				{(this.state.src == '')
-					? <div className='btn-download disabled'>
-						PLEASE SELECT A SONG
-					  </div>
-					: <a className='btn-download' href={this.state.src} download={this.state.src.split('/')[3]} onClick={this.onClickDownload.bind(this)}>
-						<span className='fa fa-download'></span>
-						DOWNLOAD
-					  </a>
-				}
-				<audio ref='music' controls>
+				<div className='control'>
+					<div className='btn play'>
+						PLAY
+					</div>
+					{(this.state.src == '')
+						? <div className='btn download disabled'>
+							PLEASE SELECT A SONG
+						  </div>
+						: <a className='btn download' href={this.state.src} download={this.state.src.split('/')[3]} onClick={this.onClickDownload.bind(this)}>
+							<span className='fa fa-download'></span>
+							DOWNLOAD
+						  </a>
+					}
+				</div>
+				<audio ref='music'>
 					<source src='' type='audio/mp3' />
 				</audio>
 				<div className='list'>
 					{this.getList()}
+					<div className='fade'></div>
 				</div>
-				<div className='fade'></div>
+				
 			</div>
 		);
 	}
