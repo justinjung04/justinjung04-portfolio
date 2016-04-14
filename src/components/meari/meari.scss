@@ -1,0 +1,130 @@
+.meari {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: $background-color;
+	color: $color;
+	
+	.btn-download {
+		margin: $btn-download-margin;
+		padding: $btn-download-padding;
+		border: $btn-download-border;
+		border-radius: $btn-download-radius;
+		font-size: $btn-download-font-size;
+		color: $btn-download-color;
+		cursor: pointer;
+
+		&.disabled {
+			cursor: default;
+		}
+
+		.fa {
+			margin: $btn-download-fa-margin;
+		}
+	}
+
+	audio {
+		z-index: 1;
+		width: $audio-width;
+		max-width: $audio-max-width;
+		min-width: $audio-min-width;
+		height: $audio-height;
+	}
+
+	.list {
+		width: $list-width;
+		max-width: $list-max-width;
+		min-width: $list-min-width;
+		height: $list-height;
+		padding: $list-padding;
+		font-size: $list-font-size;
+		overflow: auto;
+		background-color: rgb(255, 255, 255);
+		box-shadow: rgba(255, 255, 255, 0.8) 2px 2px,
+					rgba(255, 255, 255, 0.6) 4px 4px,
+					rgba(255, 255, 255, 0.4) 6px 6px,
+					rgba(255, 255, 255, 0.2) 8px 8px,
+					rgba(255, 255, 255, 0) 10px 10px,
+
+					rgba(255, 255, 255, 0.8) -2px 2px,
+					rgba(255, 255, 255, 0.6) -4px 4px,
+					rgba(255, 255, 255, 0.4) -6px 6px,
+					rgba(255, 255, 255, 0.2) -8px 8px,
+					rgba(255, 255, 255, 0) -10px 10px,
+
+					rgba(255, 255, 255, 0.8) 2px 0,
+					rgba(255, 255, 255, 0.6) 4px 0,
+					rgba(255, 255, 255, 0.4) 6px 0,
+					rgba(255, 255, 255, 0.2) 8px 0,
+					rgba(255, 255, 255, 0) 10px 0,
+
+					rgba(255, 255, 255, 0.8) -2px 0,
+					rgba(255, 255, 255, 0.6) -4px 0,
+					rgba(255, 255, 255, 0.4) -6px 0,
+					rgba(255, 255, 255, 0.2) -8px 0,
+					rgba(255, 255, 255, 0) -10px 0;
+
+		span {
+			display: inline-block;
+			transition: 1s all ease;
+		}
+		
+		ul {
+			padding: 0;
+			list-style-type: none;
+		}
+
+		.col {
+			height: $list-col-height;
+			line-height: $list-col-height;
+			padding: 0 1%;
+			cursor: pointer;
+
+			&.disabled {
+				opacity: 0.25;
+				cursor: default;
+			}
+
+			&.fa {
+				width: $list-col-fa-width;
+				padding: 0;
+				opacity: 0;
+				cursor: default;
+			}
+
+			&.number {
+				width: $list-col-number-width;
+				padding: 0;
+			}
+
+			&.title {
+				width: $list-col-title-width;
+				padding: 0;
+			}
+		}
+
+		.active-track {
+			.fa,
+			.number,
+			.title,
+			.active-voice {
+				color: $dark-color;
+				opacity: 1;
+			}
+		}
+	}
+
+	.fade {
+		position: absolute;
+		left: $fade-left;
+		top: $fade-top;
+		transform: $fade-transform;
+		width: $fade-width;
+		max-width: $fade-max-width;
+		min-width: $fade-min-width;
+		height: $fade-height;
+		background: linear-gradient(rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0) 70%, rgba(255, 255, 255, 1) 100%);
+		pointer-events: none;
+	}
+}

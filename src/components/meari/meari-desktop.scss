@@ -1,145 +1,42 @@
 $background-color: #ddf9e9;
 $color: #aec6cf;
 $dark-color: #526972;
+
+$btn-download-margin: 0 0 40px 0;
+$btn-download-padding: 10px;
+$btn-download-border: 3px solid $color;
+$btn-download-radius: 5px;
+$btn-download-font-size: 17px;
+$btn-download-color: $color;
+
+$btn-download-fa-margin: 0 8px 0 0;
+
+$audio-width: 55%;
+$audio-max-width: 800px;
+$audio-min-width: 700px;
 $audio-height: 50px;
-$list-width: 55%;
+
+$list-width: calc(#{$audio-width} - 10px);
+$list-max-width: calc(#{$audio-max-width} - 10px);
+$list-min-width: calc(#{$audio-min-width} - 10px);
 $list-height: 50%;
-$list-width-max: 800px;
-$list-width-min: 700px;
-$fa-width: 7%;
-$number-width: 8%;
-$title-width: 35%;
-$line-height: 50px;
+$list-padding: 0 10px 10% 20px;
+$list-font-size: 17px;
 
-.meari {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+$list-col-height: 50px;
 
-	background-color: $background-color;
-	color: $color;
+$list-col-fa-width: 7%;
 
-	.btn {
-		padding: 10px;
-		border: 3px solid $color;
-		border-radius: 5px;
-		cursor: pointer;
-		color: $color;
-		margin-bottom: 40px;
+$list-col-number-width: 8%;
 
-		.fa {
-			margin-right: 8px;
-		}
+$list-col-title-width: 35%;
 
-		&.disabled {
-			cursor: default;
-		}
-	}
-	
-	audio {
-		width: $list-width;
-		max-width: $list-width-max;
-		min-width: $list-width-min;
-		height: $audio-height;
-		z-index: 1;
-	}
+$fade-left: calc(50% - 5px);
+$fade-top: calc(50% + #{$audio-height} + 18px);
+$fade-transform: translate(-50%, -50%);
+$fade-width: calc(#{$list-width} - 30px);
+$fade-max-width: calc(#{$list-max-width} - 30px);
+$fade-min-width: calc(#{$list-min-width} - 30px);
+$fade-height: $list-height;
 
-	.track-list {
-		width: calc(#{$list-width} - 10px);
-		max-width: calc(#{$list-width-max} - 10px);
-		min-width: calc(#{$list-width-min} - 10px);
-		height: $list-height;
-		padding-right: 10px;
-		overflow: auto;
-
-		background: rgb(255, 255, 255);
-		box-shadow: 
-					rgba(255, 255, 255, 0.8) 2px 2px,
-					rgba(255, 255, 255, 0.6) 4px 4px,
-					rgba(255, 255, 255, 0.4) 6px 6px,
-					rgba(255, 255, 255, 0.2) 8px 8px,
-					rgba(255, 255, 255, 0) 10px 10px,
-
-					rgba(255, 255, 255, 0.8) -2px 2px,
-					rgba(255, 255, 255, 0.6) -4px 4px,
-					rgba(255, 255, 255, 0.4) -6px 6px,
-					rgba(255, 255, 255, 0.2) -8px 8px,
-					rgba(255, 255, 255, 0) -10px 10px,
-
-					rgba(255, 255, 255, 0.8) 2px 0,
-					rgba(255, 255, 255, 0.6) 4px 0,
-					rgba(255, 255, 255, 0.4) 6px 0,
-					rgba(255, 255, 255, 0.2) 8px 0,
-					rgba(255, 255, 255, 0) 10px 0,
-
-					rgba(255, 255, 255, 0.8) -2px 0,
-					rgba(255, 255, 255, 0.6) -4px 0,
-					rgba(255, 255, 255, 0.4) -6px 0,
-					rgba(255, 255, 255, 0.2) -8px 0,
-					rgba(255, 255, 255, 0) -10px 0;
-		
-		ul {
-			list-style-type: none;
-			padding: 0 0 10% 20px;
-		}
-
-		span {
-			display: inline-block;
-			transition: 1s all ease;
-		}
-
-		li {
-			height: $line-height;
-		}
-
-		.fa {
-			width: $fa-width;
-			opacity: 0;
-		}
-
-		.number {
-			width: $number-width;
-		}
-
-		.title {
-			width: $title-width;
-		}
-
-		.padding {
-			padding: 0 2%;
-		}
-
-		.clickable {
-			cursor: pointer;
-
-			&.disabled {
-				cursor: default;
-				opacity: 0.25;
-			}
-		}
-
-		.active-track {
-			.number,
-			.title,
-			.fa,
-			.active-voice {
-				color: $dark-color;
-				opacity: 1;
-			}
-		}
-	}
-
-	.fade-out {
-		position: absolute;
-		width: calc(#{$list-width} - 20px);
-		max-width: calc(#{$list-width-max} - 20px);
-		min-width: calc(#{$list-width-min} - 20px);
-		height: $list-height;
-		left: calc(50% - 5px);
-		top: calc(50% + #{$audio-height} + 18px);
-		transform: translate(-50%, -50%);
-		background: linear-gradient(rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0) 70%, rgba(255, 255, 255, 1) 100%);
-		pointer-events: none;
-	}
-}
+@import './meari.scss';
