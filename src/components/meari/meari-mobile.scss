@@ -1,38 +1,29 @@
 $background-color: #ddf9e9;
 $color: #aec6cf;
 $dark-color: #526972;
+$font-size: 3.1vw;
 
 $btn-margin: 0 0 40px 0;
 $btn-padding: 10px;
-$btn-border: 3px solid $color;
-$btn-radius: 5px;
 $btn-font-size: 4vw;
 $btn-color: $color;
 
-$btn-download-fa-margin: 0 2vw 0 0;
+$player-width: 55%;
+$player-max-width: 800px;
+$player-min-width: 700px;
+$player-height: 60%;
 
-$audio-width: 100%;
-$audio-max-width: none;
-$audio-min-width: 0;
-$audio-height: 120px;
+$control-width: 100%;
+$control-max-width: none;
+$control-min-width: 0;
+$control-height: 120px;
 
-$list-width: 100%;
-$list-max-width: none;
-$list-min-width: 0;
-$list-height: 50%;
-$list-font-size: 3.1vw;
-
-$list-ul-padding: 0 10px 25% 1vw;
-
+$list-padding: 0 10px 25% 1vw;
 $list-col-height: 10vw;
 $list-col-padding: 0 1%;
-
 $list-col-fa-width: 5%;
-
 $list-col-number-width: 7%;
-
 $list-col-title-width: 38%;
-
-$fade-width: calc(100% - 10px);
+$list-fade-width: calc(100% - 10px);
 
 @import './meari.scss';

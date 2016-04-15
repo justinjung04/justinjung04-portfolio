@@ -9,122 +9,80 @@ export default class Meari extends Component {
 			voice: '',
 			src: ''
 		};
+		this.voices = ['soprano', 'alto', 'tenor', 'bass'];
 	}
 
 	componentDidMount() {
-		window.ga('set', 'page', '/meari');
-		window.ga('send', 'pageview');
+		if(process.env.NODE_ENV == 'production') {
+			window.ga('set', 'page', '/meari');
+			window.ga('send', 'pageview');	
+		}
 	}
 
 	setTrack(track, voice) {
 		let src = 'assets/hymns/' + track + '/' + track;
-
-		switch(voice) {
-			case 'soprano':
-				src += '_soprano';
-				window.ga('send', 'event', 'Soprano', 'listen');
-				break;
-			case 'alto':
-				src += '_alto';
-				window.ga('send', 'event', 'Alto', 'listen');
-				break;
-			case 'tenor':
-				src += '_tenor';
-				window.ga('send', 'event', 'Tenor', 'listen');
-				break;
-			case 'bass':
-				src += '_bass';
-				window.ga('send', 'event', 'Bass', 'listen');
-				break;
-			default:
-				window.ga('send', 'event', 'All', 'listen');
+		if(voice != 'all') {
+			src += '_' + voice;
 		}
-
 		src += '.mp3';
 		this.refs.music.src = src;
 		this.refs.music.play();
 		this.setState({ track, voice, src });
-	}
-
-	onClickDownload() {
-		switch(this.state.voice) {
-			case 'soprano':
-				window.ga('send', 'event', 'Soprano', 'download');
-				break;
-			case 'alto':
-				window.ga('send', 'event', 'Alto', 'download');
-				break;
-			case 'tenor':
-				window.ga('send', 'event', 'Tenor', 'download');
-				break;
-			case 'bass':
-				window.ga('send', 'event', 'Bass', 'download');
-				break;
-			default:
-				window.ga('send', 'event', 'All', 'download');
+		if(process.env.NODE_ENV == 'production') {
+			window.ga('send', 'event', voice, 'listen', track);
 		}
 	}
 
-	getList() {
-		const list = hymns.map((item, key) => {
-            return (
-                <li key={key} className={(this.state.track == item.track) ? 'active-track' : ''}>
-                	<i className='col fa fa-play'></i>
-                	<span className='col number' onClick={this.setTrack.bind(this, item.track, 'all')}>{item.track}</span>
-                	<span className='col title' onClick={this.setTrack.bind(this, item.track, 'all')}>{item.title}</span>
-                	<span className={`col ${(this.state.voice == 'all') ? 'active-voice' : ''}`} onClick={this.setTrack.bind(this, item.track, 'all')}>All</span>
-                	{(item.voices.indexOf('soprano') > -1)
-                		? <span className={`col ${(this.state.voice == 'soprano') ? 'active-voice' : ''}`} onClick={this.setTrack.bind(this, item.track, 'soprano')}>Soprano</span>
-                		: <span className='col disabled'>Soprano</span>
-                	}
-                	{(item.voices.indexOf('alto') > -1)
-                		? <span className={`col ${(this.state.voice == 'alto') ? 'active-voice' : ''}`} onClick={this.setTrack.bind(this, item.track, 'alto')}>Alto</span>
-                		: <span className='col disabled'>Alto</span>
-                	}
-                	{(item.voices.indexOf('tenor') > -1)
-                		? <span className={`col ${(this.state.voice == 'tenor') ? 'active-voice' : ''}`} onClick={this.setTrack.bind(this, item.track, 'tenor')}>Tenor</span>
-                		: <span className='col disabled'>Tenor</span>
-                	}
-                	{(item.voices.indexOf('bass') > -1)
-                		? <span className={`col ${(this.state.voice == 'bass') ? 'active-voice' : ''}`} onClick={this.setTrack.bind(this, item.track, 'bass')}>Bass</span>
-                		: <span className='col disabled'>Bass</span>
-                	}
-                </li>
-            );
-        });
-
-        return (
-            <ul>
-                {list}
-            </ul>
-        );
+	onClickDownload() {
+		if(process.env.NODE_ENV == 'production') {
+			window.ga('send', 'event', this.state.voice, 'download', this.state.track);
+		}
 	}
 	
 	render() {
 		return (
 			<div className='content meari'>
-				<div className='control'>
-					<div className='btn play'>
-						PLAY
-					</div>
-					{(this.state.src == '')
-						? <div className='btn download disabled'>
-							PLEASE SELECT A SONG
-						  </div>
-						: <a className='btn download' href={this.state.src} download={this.state.src.split('/')[3]} onClick={this.onClickDownload.bind(this)}>
-							<span className='fa fa-download'></span>
-							DOWNLOAD
-						  </a>
-					}
-				</div>
 				<audio ref='music'>
 					<source src='' type='audio/mp3' />
 				</audio>
-				<div className='list'>
-					{this.getList()}
+				<div className='player'>
+					<div className='control'>
+						<div className='btn play'>PLAY</div>
+						{(this.state.src == '')
+							? <div className='btn download disabled'>PLEASE SELECT A SONG</div>
+							: <a className='btn download' href={this.state.src} download={this.state.src.split('/')[3]} onClick={this.onClickDownload.bind(this)}>DOWNLOAD</a>
+						}
+					</div>
+					<ul className='list'>
+		                {hymns.map((item, key) => {
+		                	const listClass = (this.state.track == item.track) ? 'active-song' : '';
+		                	const onClickAll = this.setTrack.bind(this, item.track, 'all');
+		                	const voiceAllClass = `col ${(this.state.voice == 'all') ? 'active-voice' : ''}`;
+				            return (
+				                <li key={key} className={listClass}>
+				                	<i className='col fa fa-play'></i>
+				                	<span className='col number' onClick={onClickAll}>{item.track}</span>
+				                	<span className='col title' onClick={onClickAll}>{item.title}</span>
+				                	<span className={voiceAllClass} onClick={onClickAll}>All</span>
+				                	{this.voices.map((voice, key) => {
+				                		let voiceClass, onClickVoice;
+				                		if(item.voices.indexOf(voice) > -1) {
+				                			voiceClass = `col ${(this.state.voice == voice) ? 'active-voice' : ''}`;;
+				                			onClickVoice = this.setTrack.bind(this, item.track, voice);
+				                		} else {
+				                			voiceClass = 'col disabled';
+				                			onClickVoice = ''
+				                		}
+				                		return (
+				                			<span key={key} className={voiceClass} onClick={onClickVoice}>{voice}</span>
+				                		);
+				                	})}
+				                </li>
+				            );
+				        })}
+		            </ul>
 					<div className='fade'></div>
 				</div>
-				
 			</div>
 		);
 	}
