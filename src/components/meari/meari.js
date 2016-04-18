@@ -8,7 +8,7 @@ export default class Meari extends Component {
 			track: 0,
 			voice: '',
 			src: '',
-			volume: 1,
+			volume: 0.5,
 			isPlaying: false,
 			isMute: false
 		};
@@ -16,6 +16,7 @@ export default class Meari extends Component {
 	}
 
 	componentDidMount() {
+		this.refs.music.volume = this.state.volume;
 		if(process.env.NODE_ENV == 'production') {
 			window.ga('set', 'page', '/meari');
 			window.ga('send', 'pageview');	
@@ -87,7 +88,7 @@ export default class Meari extends Component {
 									<i className={`fa ${this.state.isMute? 'fa-volume-off' : 'fa-volume-up'}`} onClick={this.toggleVolume.bind(this)}></i>
 									<svg className='volume' ref='volume'>
 										<rect className='empty' x='0' y='45%' />
-										<rect className='filled' x='0' y='45%' style={{width: '50%'}} />
+										<rect className='filled' x='0' y='45%' width={`${(this.state.isMute? '0' : this.state.volume * 100)}%`} />
 									</svg>
 								</div>
 							</div>
