@@ -1,5 +1,15 @@
 const Hymns = [
 	{
+		title: '나는 포도나무요',
+		track: '35',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
+	},
+	{
+		title: '사랑의 송가',
+		track: '46',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
+	},
+	{
 		title: '착하신 목자',
 		track: '55',
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
@@ -17,6 +27,11 @@ const Hymns = [
 	{
 		title: '알렐루야 노래하자',
 		track: '129',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
+	},
+	{
+		title: '찬미 노래 드리자',
+		track: '131',
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
 	{
@@ -65,9 +80,24 @@ const Hymns = [
 		voices: [ 'soprano', 'bass' ]
 	},
 	{
+		title: '주님은 우리 사랑하셨네',
+		track: '496',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
+	},
+	{
+		title: '만찬의 신비',
+		track: '499',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
+	},
+	{
 		title: '받으소서 우리 마음',
 		track: '501',
 		voices: [ ]
+	},
+	{
+		title: '미약하온 우리 제물',
+		track: '511',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	}
 ];
 
