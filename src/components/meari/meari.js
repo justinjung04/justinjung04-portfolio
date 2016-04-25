@@ -65,19 +65,7 @@ export default class Meari extends Component {
 		}
 	}
 
-	toggleVolume() {
-		let isMute;
-		if(this.state.isMute) {
-			this.refs.music.volume = this.state.volume;
-			isMute = false;
-		} else {
-			this.refs.music.volume = 0;
-			isMute = true;
-		}
-		this.setState({ isMute });
-	}
-
-	trackDownload() {
+	downloadTrack() {
 		if(process.env.NODE_ENV == 'production') {
 			window.ga('send', 'event', this.state.voice, 'download', this.state.track);
 		}
@@ -106,6 +94,42 @@ export default class Meari extends Component {
 		this.refs.music.currentTime = this.refs.music.duration * percentage;
 		this.setState({ seekerWidth });
 	}
+
+	volumeStart(e) {
+		this.isVolumeActive = true;
+		this.setVolume(e);
+	}
+
+	volumeMove(e) {
+		if(this.isVolumeActive) {
+			this.setVolume(e);
+		}
+	}
+
+	volumeEnd() {
+		this.isVolumeActive = false;
+	}
+
+	setVolume(e) {
+		const position = e.clientX - this.refs.volume.getBoundingClientRect().left - 5;
+		const width = this.refs.volume.getBoundingClientRect().width - 10;
+		const volume = Math.max(Math.min(position / width, 1), 0);
+		const isMute = (volume == 0) ? true : false;
+		this.refs.music.volume = volume;
+		this.setState({ isMute, volume });
+	}
+
+	muteVolume() {
+		let isMute;
+		if(this.state.isMute) {
+			this.refs.music.volume = this.state.volume;
+			isMute = false;
+		} else {
+			this.refs.music.volume = 0;
+			isMute = true;
+		}
+		this.setState({ isMute });
+	}
 	
 	render() {
 		return (
@@ -122,16 +146,13 @@ export default class Meari extends Component {
 									{this.getSeekerSVG()}
 								</div>
 								<div className='volume-wrapper'>
-									<i className={`fa ${this.state.isMute? 'fa-volume-off' : 'fa-volume-up'}`} onClick={this.toggleVolume.bind(this)}></i>
-									<svg className='volume' ref='volume'>
-										<rect className='empty' x='0' y='45%' />
-										<rect className='filled' x='0' y='45%' width={`${(this.state.isMute? '0' : this.state.volume * 100)}%`} />
-									</svg>
+									<i className={`fa ${this.state.isMute? 'fa-volume-off' : 'fa-volume-up'}`} onClick={this.muteVolume.bind(this)}></i>
+									{this.getVolumeSVG()}
 								</div>
 							</div>
 							<div className='bottom'>
 								<div className='btn play' onClick={this.toggleMusic.bind(this)}>{(this.state.isPlaying)? 'PAUSE' : 'PLAY'}</div>
-								<a className='btn download' href={this.state.src} download={this.state.src.split('/')[3]} onClick={this.trackDownload.bind(this)}>DOWNLOAD</a>
+								<a className='btn download' href={this.state.src} download={this.state.src.split('/')[3]} onClick={this.downloadTrack.bind(this)}>DOWNLOAD</a>
 							</div>
 						  </div>
 					}

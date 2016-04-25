@@ -12,4 +12,13 @@ export default class MeariDesktop extends Meari {
 			</svg>
 		);
 	}
+
+	getVolumeSVG() {
+		return (
+			<svg className='volume' ref='volume' onMouseDown={this.volumeStart.bind(this)} onMouseMove={this.volumeMove.bind(this)} onMouseUp={this.volumeEnd.bind(this)} onMouseLeave={this.volumeEnd.bind(this)}>
+				<rect className='empty' x='0' y='45%' />
+				<rect className='filled' x='0' y='45%' width={`${(this.state.isMute? '0' : this.state.volume * 100)}%`} />
+			</svg>
+		);
+	}
 }
