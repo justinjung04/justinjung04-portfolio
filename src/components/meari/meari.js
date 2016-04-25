@@ -10,17 +10,37 @@ export default class Meari extends Component {
 			src: '',
 			volume: 0.5,
 			isPlaying: false,
-			isMute: false
+			isMute: false,
+			seekerWidth: 0
 		};
 		this.voices = ['soprano', 'alto', 'tenor', 'bass'];
+		this.isSeekerActive = false;
 	}
 
 	componentDidMount() {
 		this.refs.music.volume = this.state.volume;
+		this.refs.music.onplay = this.setPlay.bind(this, true);
+		this.refs.music.onpause = this.setPlay.bind(this, false);
+		this.refs.music.onended = this.setPlay.bind(this, false);
 		if(process.env.NODE_ENV == 'production') {
 			window.ga('set', 'page', '/meari');
 			window.ga('send', 'pageview');	
 		}
+	}
+
+	setPlay(start) {
+		let isPlaying;
+		if(start) {
+			this.seekerProgress = setInterval(() => {
+				const seekerWidth = (this.refs.music.currentTime / this.refs.music.duration * 100) + '%';
+				this.setState({ seekerWidth });
+			}, 50);
+			isPlaying = true;
+		} else {
+			clearInterval(this.seekerProgress);
+			isPlaying = false;
+		}
+		this.setState({ isPlaying });
 	}
 
 	setTrack(track, voice) {
@@ -31,22 +51,18 @@ export default class Meari extends Component {
 		src += '.mp3';
 		this.refs.music.src = src;
 		this.refs.music.play();
-		this.setState({ track, voice, src, isPlaying: true });
+		this.setState({ track, voice, src });
 		if(process.env.NODE_ENV == 'production') {
 			window.ga('send', 'event', voice, 'listen', track);
 		}
 	}
 
 	toggleMusic() {
-		let isPlaying;
 		if(this.state.isPlaying) {
 			this.refs.music.pause();
-			isPlaying = false;
 		} else {
 			this.refs.music.play();
-			isPlaying = true;	
 		}
-		this.setState({ isPlaying });
 	}
 
 	toggleVolume() {
@@ -66,6 +82,30 @@ export default class Meari extends Component {
 			window.ga('send', 'event', this.state.voice, 'download', this.state.track);
 		}
 	}
+
+	seekerStart(e) {
+		this.isSeekerActive = true;
+		this.setSeeker(e);
+	}
+
+	seekerMove(e) {
+		if(this.isSeekerActive) {
+			this.setSeeker(e);
+		}
+	}
+
+	seekerEnd() {
+		this.isSeekerActive = false;
+	}
+
+	setSeeker(e) {
+		const position = e.clientX - this.refs.seeker.getBoundingClientRect().left - 5;
+		const width = this.refs.seeker.getBoundingClientRect().width - 10;
+		const percentage = Math.max(Math.min(position / width, 1), 0);
+		const seekerWidth = (percentage * 100) + '%';
+		this.refs.music.currentTime = this.refs.music.duration * percentage;
+		this.setState({ seekerWidth });
+	}
 	
 	render() {
 		return (
@@ -79,10 +119,7 @@ export default class Meari extends Component {
 						: <div className='control'>
 							<div className='top'>
 								<div className='seeker-wrapper'>
-									<svg className='seeker' ref='seeker'>
-										<rect className='empty' x='0' y='45%' />
-										<rect className='filled' x='0' y='45%' />
-									</svg>
+									{this.getSeekerSVG()}
 								</div>
 								<div className='volume-wrapper'>
 									<i className={`fa ${this.state.isMute? 'fa-volume-off' : 'fa-volume-up'}`} onClick={this.toggleVolume.bind(this)}></i>
@@ -94,7 +131,6 @@ export default class Meari extends Component {
 							</div>
 							<div className='bottom'>
 								<div className='btn play' onClick={this.toggleMusic.bind(this)}>{(this.state.isPlaying)? 'PAUSE' : 'PLAY'}</div>
-								
 								<a className='btn download' href={this.state.src} download={this.state.src.split('/')[3]} onClick={this.trackDownload.bind(this)}>DOWNLOAD</a>
 							</div>
 						  </div>

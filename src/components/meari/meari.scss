@@ -85,6 +85,7 @@
 			height: 100%;
 			padding: 0 5px 0 5px;
 			box-sizing: border-box;
+			cursor: pointer;
 
 			.empty {
 				width: 100%;
@@ -93,7 +94,6 @@
 			}
 			
 			.filled {
-				// width: 50%;
 				height: 10%;
 				fill: $dark-color;
 			}
