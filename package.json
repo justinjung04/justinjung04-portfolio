@@ -1,8 +1,8 @@
 {
-  "name": "webpack-boilerplate",
-  "version": "1.0.1",
-  "description": "A boilerplate that utilizes Webpack with React",
-  "repository": "git@github.com:justinjung90/webpack-boilerplate.git",
+  "name": "justinjung04",
+  "version": "1.2.0",
+  "description": "An awesome web developer's website",
+  "repository": "git@bitbucket.org:justinjung04/justinjung04-portfolio.git",
   "author": "Justin Jung",
   "license": "MIT",
   "scripts": {
@@ -41,6 +41,7 @@
     "sass-loader": "^3.1.2",
     "signals": "^1.0.0",
     "style-loader": "^0.13.0",
+    "three": "^0.76.1",
     "velocity-react": "^1.1.1",
     "webpack": "^1.12.11",
     "webpack-dev-middleware": "^1.4.0",
