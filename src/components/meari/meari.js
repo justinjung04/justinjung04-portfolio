@@ -34,7 +34,7 @@ export default class Meari extends Component {
 			this.seekerProgress = setInterval(() => {
 				const seekerWidth = (this.refs.music.currentTime / this.refs.music.duration * 100) + '%';
 				this.setState({ seekerWidth });
-			}, 50);
+			}, 200);
 			isPlaying = true;
 		} else {
 			clearInterval(this.seekerProgress);
@@ -57,7 +57,9 @@ export default class Meari extends Component {
 		}
 	}
 
-	toggleMusic() {
+	toggleMusic(e) {
+		e.preventDefault();
+		e.stopPropagation();
 		if(this.state.isPlaying) {
 			this.refs.music.pause();
 		} else {
@@ -87,7 +89,8 @@ export default class Meari extends Component {
 	}
 
 	setSeeker(e) {
-		const position = e.clientX - this.refs.seeker.getBoundingClientRect().left - 5;
+		let clientX = (e.touches) ? e.touches[0].clientX : e.clientX;
+		const position = clientX - this.refs.seeker.getBoundingClientRect().left - 5;
 		const width = this.refs.seeker.getBoundingClientRect().width - 10;
 		const percentage = Math.max(Math.min(position / width, 1), 0);
 		const seekerWidth = (percentage * 100) + '%';
@@ -111,7 +114,8 @@ export default class Meari extends Component {
 	}
 
 	setVolume(e) {
-		const position = e.clientX - this.refs.volume.getBoundingClientRect().left - 5;
+		let clientX = (e.touches) ? e.touches[0].clientX : e.clientX;
+		const position = clientX - this.refs.volume.getBoundingClientRect().left - 5;
 		const width = this.refs.volume.getBoundingClientRect().width - 10;
 		const volume = Math.max(Math.min(position / width, 1), 0);
 		const isMute = (volume == 0) ? true : false;
@@ -119,7 +123,7 @@ export default class Meari extends Component {
 		this.setState({ isMute, volume });
 	}
 
-	muteVolume() {
+	muteVolume(e) {
 		let isMute;
 		if(this.state.isMute) {
 			this.refs.music.volume = this.state.volume;

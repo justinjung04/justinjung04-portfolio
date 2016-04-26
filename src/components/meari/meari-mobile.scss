@@ -1,22 +1,27 @@
 $background-color: #ddf9e9;
 $color: #aec6cf;
 $dark-color: #526972;
-$font-size: 3.1vw;
+$font-size: 3vw;
 
 $btn-margin: 0 0 40px 0;
 $btn-padding: 10px 10px 20px 10px;
 $btn-font-size: 4vw;
 $btn-color: $color;
 
-$player-width: 55%;
-$player-max-width: 800px;
-$player-min-width: 700px;
+$player-width: calc(100% - 20px);
+$player-max-width: none;
+$player-min-width: 0;
 $player-height: 60%;
 
 $control-width: 100%;
 $control-max-width: none;
 $control-min-width: 0;
-$control-height: 120px;
+$control-height: 100px;
+
+$seeker-wrapper-padding: 0 10px;
+$volume-wrapper-padding: 0 10 0 0;
+$volume-icon-width: 30px;
+$volume-icon-padding: 0 0 0 10px;
 
 $list-padding: 0 10px 25% 1vw;
 $list-col-height: 10vw;
