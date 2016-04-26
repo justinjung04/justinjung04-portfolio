@@ -7,6 +7,13 @@
 	color: $color;
 	font-size: $font-size;
 
+	// canvas {
+	// 	position: absolute;
+	// 	left: 0;
+	// 	top: 0;
+	// 	z-index: 5;
+	// }
+
 	.player {
 		position: relative;
 		width: $player-width;
