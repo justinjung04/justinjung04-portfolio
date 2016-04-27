@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import songs from '../../constants/songs';
-import Three from 'three';
+import d3 from 'd3';
 
 export default class Meari extends Component {
 	constructor() {
@@ -14,84 +14,38 @@ export default class Meari extends Component {
 			isMute: false,
 			seekerWidth: 0
 		};
+
 		this.voices = ['soprano', 'alto', 'tenor', 'bass'];
 		this.isSeekerActive = false;
-
-		this.visualizeAudio = (start) => {
-			if(start) {
-				this.renderFrameRequest = requestAnimationFrame(this.visualizeAudio);
-				this.freqAnalyser.getByteFrequencyData(this.frequencyData);
-				console.log(this.frequencyData);
-			} else {
-				cancelAnimationFrame(this.renderFrameRequest);
-			}
-		};
 	}
 
 	componentDidMount() {
 		this.refs.music.volume = this.state.volume;
 		this.refs.music.onplay = this.setPlay.bind(this, true);
 		this.refs.music.onpause = this.setPlay.bind(this, false);
-		this.refs.music.onended = this.setPlay.bind(this, false);
+		this.refs.music.onended = () => {
+			this.setState({ isPlaying: false });
+		};
 		if(process.env.NODE_ENV == 'production') {
 			window.ga('set', 'page', '/meari');
 			window.ga('send', 'pageview');	
 		}
-
-		const ctx = new AudioContext();
-		const src = ctx.createMediaElementSource(this.refs.music);
-		this.freqAnalyser = ctx.createAnalyser();
-		src.connect(this.freqAnalyser);
-		this.frequencyData = new Uint8Array(200);
-
-
-
-		let width = 800;
-		let height = 200;
-
-		this.scene = new Three.Scene();
-		this.camera = new Three.PerspectiveCamera(50, width/height, 1, 10);
-		this.camera.position.z = 2;
- 
-		let geometry = new Three.BoxGeometry(1, 1, 1);
-		let material = new Three.MeshBasicMaterial({color: 0xff0000, wireframe: true});
-		this.mesh = new Three.Mesh(geometry, material);
-		this.scene.add(this.mesh);
- 
-		this.renderer = new Three.WebGLRenderer();
-		this.renderer.setSize(width, height);
-		this.renderer.setClearColor(0xffffff, 0);
- 
-		this.refs.visualiser.appendChild(this.renderer.domElement);
-
-		this.animate = () => {
-			requestAnimationFrame(this.animate);
- 
-			this.mesh.rotation.x += 0.01;
-			this.mesh.rotation.y += 0.02;
-	 
-			this.renderer.render(this.scene, this.camera);
-		}
-
-		this.animate();
 	}
 
 	setPlay(start) {
-		let isPlaying;
 		if(start) {
 			this.seekerProgress = setInterval(() => {
 				const seekerWidth = (this.refs.music.currentTime / this.refs.music.duration * 100) + '%';
 				this.setState({ seekerWidth });
 			}, 200);
-			isPlaying = true;
 		} else {
 			clearInterval(this.seekerProgress);
-			isPlaying = false;
 		}
-		this.setState({ isPlaying });
 	}
 
 	setTrack(track, voice) {
+		// this.audioContext.close();
+
 		let src = 'assets/songs/' + track + '/' + track;
 		if(voice != 'all') {
 			src += '_' + voice;
@@ -99,23 +53,25 @@ export default class Meari extends Component {
 		src += '.mp3';
 		this.refs.music.src = src;
 		this.refs.music.play();
-		this.setState({ track, voice, src });
+		const isPlaying = true;
+		this.setState({ track, voice, src, isPlaying });
 		if(process.env.NODE_ENV == 'production') {
 			window.ga('send', 'event', voice, 'listen', track);
 		}
-		this.visualizeAudio(true);
 	}
 
 	toggleMusic(e) {
 		e.preventDefault();
 		e.stopPropagation();
+		let isPlaying;
 		if(this.state.isPlaying) {
 			this.refs.music.pause();
-			this.visualizeAudio(false);
+			isPlaying = false;
 		} else {
 			this.refs.music.play();
-			this.visualizeAudio(true);
+			isPlaying = true;
 		}
+		this.setState({ isPlaying });
 	}
 
 	downloadTrack() {
@@ -126,6 +82,7 @@ export default class Meari extends Component {
 
 	seekerStart(e) {
 		this.isSeekerActive = true;
+		this.refs.music.pause();
 		this.setSeeker(e);
 	}
 
@@ -136,13 +93,20 @@ export default class Meari extends Component {
 	}
 
 	seekerEnd() {
+		if(this.state.isPlaying) {
+			this.refs.music.play();	
+		}
+		this.isSeekerActive = false;
+	}
+
+	seekerLeft() {
 		this.isSeekerActive = false;
 	}
 
 	setSeeker(e) {
 		let clientX = (e.touches) ? e.touches[0].clientX : e.clientX;
-		const position = clientX - this.refs.seeker.getBoundingClientRect().left - 5;
-		const width = this.refs.seeker.getBoundingClientRect().width - 10;
+		const position = clientX - this.refs.seeker.getBoundingClientRect().left;
+		const width = this.refs.seeker.getBoundingClientRect().width;
 		const percentage = Math.max(Math.min(position / width, 1), 0);
 		const seekerWidth = (percentage * 100) + '%';
 		this.refs.music.currentTime = this.refs.music.duration * percentage;
@@ -166,8 +130,8 @@ export default class Meari extends Component {
 
 	setVolume(e) {
 		let clientX = (e.touches) ? e.touches[0].clientX : e.clientX;
-		const position = clientX - this.refs.volume.getBoundingClientRect().left - 5;
-		const width = this.refs.volume.getBoundingClientRect().width - 10;
+		const position = clientX - this.refs.volume.getBoundingClientRect().left;
+		const width = this.refs.volume.getBoundingClientRect().width;
 		const volume = Math.max(Math.min(position / width, 1), 0);
 		const isMute = (volume == 0) ? true : false;
 		this.refs.music.volume = volume;
@@ -182,7 +146,7 @@ export default class Meari extends Component {
 		} else {
 			this.refs.music.volume = 0;
 			isMute = true;
-		}
+		}g
 		this.setState({ isMute });
 	}
 	
@@ -192,10 +156,10 @@ export default class Meari extends Component {
 				<audio ref='music'>
 					<source src='' type='audio/mp3' />
 				</audio>
-				<div ref='visualiser'></div>
 				<div className='player'>
+					<div className='visualizer' ref='visualizer'></div>
 					{(this.state.src == '')
-						? <div className='control'>PLEASE SELECT A SONG</div>
+						? <div className='control no-song'>PLEASE SELECT A SONG</div>
 						: <div className='control'>
 							<div className='top'>
 								<div className='seeker-wrapper'>
