@@ -111,13 +111,10 @@
 			cursor: pointer;
 
 			.empty {
-				width: 100%;
-				height: 10%;
 				fill: $color;
 			}
 			
 			.filled {
-				height: 10%;
 				fill: $dark-color;
 			}
 		}

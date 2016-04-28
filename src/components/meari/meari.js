@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import songs from '../../constants/songs';
-import d3 from 'd3';
+// import d3 from 'd3';
 
 export default class Meari extends Component {
 	constructor() {
@@ -136,7 +136,7 @@ export default class Meari extends Component {
 		this.setState({ isMute, volume });
 	}
 
-	muteVolume(e) {
+	muteVolume() {
 		let isMute;
 		if(this.state.isMute) {
 			this.refs.music.volume = this.state.volume;
@@ -149,7 +149,6 @@ export default class Meari extends Component {
 	}
 	
 	render() {
-		console.log(this.state.src);
 		return (
 			<div className='content meari'>
 				<audio ref='music'>
