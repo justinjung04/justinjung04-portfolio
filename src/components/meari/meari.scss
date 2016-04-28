@@ -56,8 +56,17 @@
 		height: $control-height;
 		border-bottom: 1px solid $dark-color;
 
-		&.no-song {
-			padding: $no-song-padding;
+		.no-song {
+			position: absolute;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			left: 0;
+			top: 0;
+			z-index: 1;
+			width: 100%;
+			height: 100%;
+			background-color: #ffffff;
 		}
 
 		.top, .bottom {

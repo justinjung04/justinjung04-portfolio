@@ -45,7 +45,6 @@ export default class Meari extends Component {
 
 	setTrack(track, voice) {
 		// this.audioContext.close();
-
 		let src = 'assets/songs/' + track + '/' + track;
 		if(voice != 'all') {
 			src += '_' + voice;
@@ -53,8 +52,7 @@ export default class Meari extends Component {
 		src += '.mp3';
 		this.refs.music.src = src;
 		this.refs.music.play();
-		const isPlaying = true;
-		this.setState({ track, voice, src, isPlaying });
+		this.setState({ track, voice, src, isPlaying: true });
 		if(process.env.NODE_ENV == 'production') {
 			window.ga('send', 'event', voice, 'listen', track);
 		}
@@ -146,11 +144,12 @@ export default class Meari extends Component {
 		} else {
 			this.refs.music.volume = 0;
 			isMute = true;
-		}g
+		}
 		this.setState({ isMute });
 	}
 	
 	render() {
+		console.log(this.state.src);
 		return (
 			<div className='content meari'>
 				<audio ref='music'>
@@ -158,9 +157,11 @@ export default class Meari extends Component {
 				</audio>
 				<div className='player'>
 					<div className='visualizer' ref='visualizer'></div>
-					{(this.state.src == '')
-						? <div className='control no-song'>PLEASE SELECT A SONG</div>
-						: <div className='control'>
+						<div className='control'>
+							{(this.state.src == '')
+								? <div className='no-song'>PLEASE SELECT A SONG</div>
+								: false
+							}
 							<div className='top'>
 								<div className='seeker-wrapper'>
 									{this.getSeekerSVG()}
@@ -174,8 +175,7 @@ export default class Meari extends Component {
 								<div className='btn play' onClick={this.toggleMusic.bind(this)}>{(this.state.isPlaying)? 'PAUSE' : 'PLAY'}</div>
 								<a className='btn download' href={this.state.src} download={this.state.src.split('/')[3]} onClick={this.downloadTrack.bind(this)}>DOWNLOAD</a>
 							</div>
-						  </div>
-					}
+						</div>
 					<ul className='list'>
 		                {songs.map((song, songKey) => {
 		                	const onClickAll = this.setTrack.bind(this, song.track, 'all');

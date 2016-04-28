@@ -5,6 +5,11 @@ const Hymns = [
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
 	{
+		title: '평화를 주옵소서 *',
+		track: '44',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
+	},
+	{
 		title: '사랑의 송가',
 		track: '46',
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
@@ -35,7 +40,7 @@ const Hymns = [
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
 	{
-		title: '알렐루야 알렐루야 주 예수',
+		title: '알렐루야 알렐루야 주 예수 *',
 		track: '135',
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
@@ -55,7 +60,17 @@ const Hymns = [
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
 	{
-		title: '나의 생명 드리니',
+		title: '사랑의 신비 *',
+		track: '174',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
+	},
+	{
+		title: '이보다 더 큰 은혜와 *',
+		track: '175',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
+	},
+	{
+		title: '나의 생명 드리니 *',
 		track: '210',
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
@@ -67,6 +82,11 @@ const Hymns = [
 	{
 		title: '생활한 제물',
 		track: '220',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
+	},
+	{
+		title: '성모의 성월 *',
+		track: '244',
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
 	{

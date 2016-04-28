@@ -4,48 +4,48 @@ import React from 'react';
 import Meari from './meari';
 
 export default class MeariDesktop extends Meari {
-	componentDidMount() {
-		super.componentDidMount();
+	// componentDidMount() {
+	// 	super.componentDidMount();
 
-		this.frequencyLength = 250;
-		this.frequencyOffset = 50;
-		this.frequencyData = new Uint8Array(this.frequencyLength);
-		this.width = 800;
-		this.height = 30;
+	// 	this.frequencyLength = 250;
+	// 	this.frequencyOffset = 50;
+	// 	this.frequencyData = new Uint8Array(this.frequencyLength);
+	// 	this.width = 800;
+	// 	this.height = 30;
 
-		this.visualizer = d3.select('.visualizer')
-							.append('svg')
-							.attr('width', '100%')
-							.attr('height', this.height);
+	// 	this.visualizer = d3.select('.visualizer')
+	// 						.append('svg')
+	// 						.attr('width', '100%')
+	// 						.attr('height', this.height);
 
-		this.visualizer.selectAll('rect')
-						.data(this.frequencyData.subarray(this.frequencyOffset))
-						.enter()
-						.append('rect')
-						.attr('x', (d, i) => { return (i * 100 / (this.frequencyLength - this.frequencyOffset)) + '%'; })
-						.attr('width', (100 / (this.frequencyLength - this.frequencyOffset) / 2) + '%')
-						.attr('fill', '#aec6cf');
+	// 	this.visualizer.selectAll('rect')
+	// 					.data(this.frequencyData.subarray(this.frequencyOffset))
+	// 					.enter()
+	// 					.append('rect')
+	// 					.attr('x', (d, i) => { return (i * 100 / (this.frequencyLength - this.frequencyOffset)) + '%'; })
+	// 					.attr('width', (100 / (this.frequencyLength - this.frequencyOffset) / 2) + '%')
+	// 					.attr('fill', '#aec6cf');
 
-		this.visualizeAudio = (start) => {
-			if(start) {
-				this.renderFrameRequest = requestAnimationFrame(this.visualizeAudio);
-				this.analyzerNode.getByteFrequencyData(this.frequencyData);
-				this.visualizer.selectAll('rect')
-								.data(this.frequencyData.subarray(this.frequencyOffset))
-								.attr('y', (d) => { return (50 - (d / 3)) + '%'; })
-								.attr('height', (d) => { return (d / 1.5) + '%'; })
-								.attr('opacity', (d) => { return d / 150; });
-			} else {
-				cancelAnimationFrame(this.renderFrameRequest);
-			}
-		};
+	// 	this.visualizeAudio = (start) => {
+	// 		if(start) {
+	// 			this.renderFrameRequest = requestAnimationFrame(this.visualizeAudio);
+	// 			this.analyzerNode.getByteFrequencyData(this.frequencyData);
+	// 			this.visualizer.selectAll('rect')
+	// 							.data(this.frequencyData.subarray(this.frequencyOffset))
+	// 							.attr('y', (d) => { return (50 - (d / 3)) + '%'; })
+	// 							.attr('height', (d) => { return (d / 1.5) + '%'; })
+	// 							.attr('opacity', (d) => { return d / 150; });
+	// 		} else {
+	// 			cancelAnimationFrame(this.renderFrameRequest);
+	// 		}
+	// 	};
 
-		this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-		this.analyzerNode = this.audioContext.createAnalyser();
-		this.audioSrc = this.audioContext.createMediaElementSource(this.refs.music);
-		this.audioSrc.connect(this.analyzerNode);
-		this.audioSrc.connect(this.audioContext.destination);
-	}
+	// 	this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+	// 	this.analyzerNode = this.audioContext.createAnalyser();
+	// 	this.audioSrc = this.audioContext.createMediaElementSource(this.refs.music);
+	// 	this.audioSrc.connect(this.analyzerNode);
+	// 	this.audioSrc.connect(this.audioContext.destination);
+	// }
 
 	getSeekerSVG() {
 		return (
@@ -65,8 +65,8 @@ export default class MeariDesktop extends Meari {
 		);
 	}
 
-	setPlay(start) {
-		super.setPlay(start);
+	// setPlay(start) {
+	// 	super.setPlay(start);
 
 		// this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
 		// this.analyzerNode = this.audioContext.createAnalyser();
@@ -74,6 +74,6 @@ export default class MeariDesktop extends Meari {
 		// this.audioSrc.connect(this.analyzerNode);
 		// this.audioSrc.connect(this.audioContext.destination);
 
-		this.visualizeAudio(start);
-	}
+		// this.visualizeAudio(start);
+	// }
 }
