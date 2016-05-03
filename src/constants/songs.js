@@ -1,11 +1,16 @@
 const Hymns = [
 	{
+		title: '우리 주 예수 그리스도 *',
+		track: '33',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
+	},
+	{
 		title: '나는 포도나무요',
 		track: '35',
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
 	{
-		title: '평화를 주옵소서 *',
+		title: '평화를 주옵소서',
 		track: '44',
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
@@ -40,12 +45,27 @@ const Hymns = [
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
 	{
-		title: '알렐루야 알렐루야 주 예수 *',
+		title: '알렐루야 알렐루야 주 예수',
 		track: '135',
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
 	{
-		title: '떡과 술의 형상에',
+		title: '부활하신 주 예수 *',
+		track: '137',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
+	},
+	{
+		title: '죽음을 이긴 *',
+		track: '141',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
+	},
+	{
+		title: '하느님의 어린양 *',
+		track: '160',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
+	},
+	{
+		title: '떡과 술의 형상에 *',
 		track: '164',
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
@@ -60,22 +80,22 @@ const Hymns = [
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
 	{
-		title: '사랑의 신비 *',
+		title: '사랑의 신비',
 		track: '174',
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
 	{
-		title: '이보다 더 큰 은혜와 *',
+		title: '이보다 더 큰 은혜와',
 		track: '175',
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
 	{
-		title: '나의 생명 드리니 *',
+		title: '나의 생명 드리니',
 		track: '210',
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
 	{
-		title: '정성 어린 우리 제물',
+		title: '정성 어린 우리 제물 *',
 		track: '217',
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
@@ -85,8 +105,23 @@ const Hymns = [
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
 	{
-		title: '성모의 성월 *',
+		title: '사랑하올 어머니 *',
+		track: '236',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
+	},
+	{
+		title: '거룩한 어머니 *',
+		track: '239',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
+	},
+	{
+		title: '성모의 성월',
 		track: '244',
+		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
+	},
+	{
+		title: '로사리오의 기도 *',
+		track: '270',
 		voices: [ 'soprano', 'alto', 'tenor', 'bass' ]
 	},
 	{
