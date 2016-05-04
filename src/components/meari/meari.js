@@ -20,12 +20,12 @@ export default class Meari extends Component {
 	}
 
 	componentDidMount() {
-		this.refs.music.volume = this.state.volume;
-		this.refs.music.onplay = this.setPlay.bind(this, true);
-		this.refs.music.onpause = this.setPlay.bind(this, false);
-		this.refs.music.onended = () => {
-			this.setState({ isPlaying: false });
-		};
+		// this.refs.music.volume = this.state.volume;
+		// this.refs.music.onplay = this.setPlay.bind(this, true);
+		// this.refs.music.onpause = this.setPlay.bind(this, false);
+		// this.refs.music.onended = () => {
+		// 	this.setState({ isPlaying: false });
+		// };
 		if(process.env.NODE_ENV == 'production') {
 			window.ga('set', 'page', '/meari');
 			window.ga('send', 'pageview');	
@@ -44,33 +44,30 @@ export default class Meari extends Component {
 	}
 
 	setTrack(track, voice) {
-		// this.audioContext.close();
-		let src = 'assets/songs/' + track + '/' + track;
+		this.src = 'assets/songs/' + track + '/' + track;
 		if(voice != 'all') {
-			src += '_' + voice;
+			this.src += '_' + voice;
 		}
-		src += '.mp3';
-		this.refs.music.src = src;
-		this.refs.music.play();
-		this.setState({ track, voice, src, isPlaying: true });
+		this.src += '.mp3';
+		this.setState({ track, voice, src: this.src, isPlaying: true });
 		if(process.env.NODE_ENV == 'production') {
 			window.ga('send', 'event', voice, 'listen', track);
 		}
 	}
 
-	toggleMusic(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		let isPlaying;
-		if(this.state.isPlaying) {
-			this.refs.music.pause();
-			isPlaying = false;
-		} else {
-			this.refs.music.play();
-			isPlaying = true;
-		}
-		this.setState({ isPlaying });
-	}
+	// toggleMusic(e) {
+	// 	e.preventDefault();
+	// 	e.stopPropagation();
+	// 	let isPlaying;
+	// 	if(this.state.isPlaying) {
+	// 		this.refs.music.pause();
+	// 		isPlaying = false;
+	// 	} else {
+	// 		this.refs.music.play();
+	// 		isPlaying = true;
+	// 	}
+	// 	this.setState({ isPlaying });
+	// }
 
 	downloadTrack() {
 		if(process.env.NODE_ENV == 'production') {
@@ -151,30 +148,28 @@ export default class Meari extends Component {
 	render() {
 		return (
 			<div className='content meari'>
-				<audio ref='music'>
-					<source src='' type='audio/mp3' />
-				</audio>
+				<div ref='audioContainer'></div>
 				<div className='player'>
-					<div className='visualizer' ref='visualizer'></div>
-						<div className='control'>
-							{(this.state.src == '')
-								? <div className='no-song'>PLEASE SELECT A SONG</div>
-								: false
-							}
-							<div className='top'>
-								<div className='seeker-wrapper'>
-									{this.getSeekerSVG()}
-								</div>
-								<div className='volume-wrapper'>
-									<i className={`fa ${this.state.isMute? 'fa-volume-off' : 'fa-volume-up'}`} onClick={this.muteVolume.bind(this)}></i>
-									{this.getVolumeSVG()}
-								</div>
+					<div className='control'>
+						{(this.state.src == '')
+							? <div className='no-song'>PLEASE SELECT A SONG</div>
+							: false
+						}
+						<div className='visualizer' ref='visualizer'></div>
+						<div className='top'>
+							<div className='seeker-wrapper'>
+								{this.getSeekerSVG()}
 							</div>
-							<div className='bottom'>
-								<div className='btn play' onClick={this.toggleMusic.bind(this)}>{(this.state.isPlaying)? 'PAUSE' : 'PLAY'}</div>
-								<a className='btn download' href={this.state.src} download={this.state.src.split('/')[3]} onClick={this.downloadTrack.bind(this)}>DOWNLOAD</a>
+							<div className='volume-wrapper'>
+								<i className={`fa ${this.state.isMute? 'fa-volume-off' : 'fa-volume-up'}`} onClick={this.muteVolume.bind(this)}></i>
+								{this.getVolumeSVG()}
 							</div>
 						</div>
+						<div className='bottom'>
+							<div className='btn play' onClick={this.togglePlay.bind(this)}>{(this.state.isPlaying)? 'PAUSE' : 'PLAY'}</div>
+							<a className='btn download' href={this.state.src} download={this.state.src.split('/')[3]} onClick={this.downloadTrack.bind(this)}>DOWNLOAD</a>
+						</div>
+					</div>
 					<ul className='list'>
 		                {songs.map((song, songKey) => {
 		                	const onClickAll = this.setTrack.bind(this, song.track, 'all');
