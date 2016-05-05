@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import songs from '../../constants/songs';
-// import d3 from 'd3';
 
 export default class Meari extends Component {
 	constructor() {
@@ -14,32 +13,13 @@ export default class Meari extends Component {
 			isMute: false,
 			seekerWidth: 0
 		};
-
 		this.voices = ['soprano', 'alto', 'tenor', 'bass'];
-		this.isSeekerActive = false;
 	}
 
 	componentDidMount() {
-		// this.refs.music.volume = this.state.volume;
-		// this.refs.music.onplay = this.setPlay.bind(this, true);
-		// this.refs.music.onpause = this.setPlay.bind(this, false);
-		// this.refs.music.onended = () => {
-		// 	this.setState({ isPlaying: false });
-		// };
 		if(process.env.NODE_ENV == 'production') {
 			window.ga('set', 'page', '/meari');
 			window.ga('send', 'pageview');	
-		}
-	}
-
-	setPlay(start) {
-		if(start) {
-			this.seekerProgress = setInterval(() => {
-				const seekerWidth = (this.refs.music.currentTime / this.refs.music.duration * 100) + '%';
-				this.setState({ seekerWidth });
-			}, 200);
-		} else {
-			clearInterval(this.seekerProgress);
 		}
 	}
 
@@ -55,29 +35,23 @@ export default class Meari extends Component {
 		}
 	}
 
-	// toggleMusic(e) {
-	// 	e.preventDefault();
-	// 	e.stopPropagation();
-	// 	let isPlaying;
-	// 	if(this.state.isPlaying) {
-	// 		this.refs.music.pause();
-	// 		isPlaying = false;
-	// 	} else {
-	// 		this.refs.music.play();
-	// 		isPlaying = true;
-	// 	}
-	// 	this.setState({ isPlaying });
-	// }
-
 	downloadTrack() {
 		if(process.env.NODE_ENV == 'production') {
 			window.ga('send', 'event', this.state.voice, 'download', this.state.track);
 		}
 	}
 
+	togglePlay() {
+		if(this.state.isPlaying) {
+			this.audio.pause();
+		} else {
+			this.audio.play();
+		}
+	}
+
 	seekerStart(e) {
 		this.isSeekerActive = true;
-		this.refs.music.pause();
+		this.audio.pause();		
 		this.setSeeker(e);
 	}
 
@@ -89,22 +63,18 @@ export default class Meari extends Component {
 
 	seekerEnd() {
 		if(this.state.isPlaying) {
-			this.refs.music.play();	
+			this.audio.play();	
 		}
 		this.isSeekerActive = false;
 	}
 
-	seekerLeft() {
-		this.isSeekerActive = false;
-	}
-
 	setSeeker(e) {
-		let clientX = (e.touches) ? e.touches[0].clientX : e.clientX;
+		const clientX = (e.touches) ? e.touches[0].clientX : e.clientX;
 		const position = clientX - this.refs.seeker.getBoundingClientRect().left;
 		const width = this.refs.seeker.getBoundingClientRect().width;
 		const percentage = Math.max(Math.min(position / width, 1), 0);
 		const seekerWidth = (percentage * 100) + '%';
-		this.refs.music.currentTime = this.refs.music.duration * percentage;
+		this.audio.currentTime = this.audio.duration * percentage;
 		this.setState({ seekerWidth });
 	}
 
@@ -124,25 +94,25 @@ export default class Meari extends Component {
 	}
 
 	setVolume(e) {
-		let clientX = (e.touches) ? e.touches[0].clientX : e.clientX;
-		const position = clientX - this.refs.volume.getBoundingClientRect().left;
-		const width = this.refs.volume.getBoundingClientRect().width;
-		const volume = Math.max(Math.min(position / width, 1), 0);
-		const isMute = (volume == 0) ? true : false;
-		this.refs.music.volume = volume;
-		this.setState({ isMute, volume });
+		// let clientX = (e.touches) ? e.touches[0].clientX : e.clientX;
+		// const position = clientX - this.refs.volume.getBoundingClientRect().left;
+		// const width = this.refs.volume.getBoundingClientRect().width;
+		// const volume = Math.max(Math.min(position / width, 1), 0);
+		// const isMute = (volume == 0) ? true : false;
+		// this.audio.volume = volume;
+		// this.setState({ isMute, volume });
 	}
 
 	muteVolume() {
-		let isMute;
-		if(this.state.isMute) {
-			this.refs.music.volume = this.state.volume;
-			isMute = false;
-		} else {
-			this.refs.music.volume = 0;
-			isMute = true;
-		}
-		this.setState({ isMute });
+		// let isMute;
+		// if(this.state.isMute) {
+		// 	this.audio.volume = this.state.volume;
+		// 	isMute = false;
+		// } else {
+		// 	this.audio.volume = 0;
+		// 	isMute = true;
+		// }
+		// this.setState({ isMute });
 	}
 	
 	render() {
