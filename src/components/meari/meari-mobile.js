@@ -7,37 +7,73 @@ export default class MeariMobile extends Meari {
 	componentDidMount() {
 		super.componentDidMount();
 
-		this.audio = document.createElement('audio');
-		const source = document.createElement('source');
+		this.audioContext = new (window.AudioContext || window.webkitAudioContext)();		
+		this.analyser = this.audioContext.createAnalyser();
+		this.source = this.audioContext.createBufferSource();
+		let bufferArray = new Float32Array(10);
 
-		source.setAttribute('type', 'audio/mp3');
-		this.audio.appendChild(source);
-		this.refs.audioContainer.appendChild(this.audio);
-		this.count = 1;
+		const request = new XMLHttpRequest();
+		request.open('GET', 'assets/songs/35/35_soprano.mp3', true);
+		request.responseType = 'arraybuffer';
+		request.onload = () => {
+			this.audioContext.decodeAudioData(request.response, (buffer) => {
+				this.source.buffer = buffer;
+				this.source.connect(this.audioContext.destination);
+				// this.source.loop = true;
+				this.source.loopEnd = 5;
+				this.source.loopStart = 3;
+				this.source.onended = () => {
+					console.log('end');
+				};
+				this.source.connect(this.analyser);
+				this.source.connect(this.audioContext.destination);
+				this.source.start(0);
 
-		this.play = () => {
-			console.log(this.count);
-			this.audioFrame = requestAnimationFrame(this.play);
-			if(this.count % 10 == 0) {
-				if(this.audio.duration > 0) {
-					const seekerWidth = (this.audio.currentTime / this.audio.duration * 100) + '%';
-					this.setState({ seekerWidth, isPlaying: true });
-				}
-			}
-			this.count++;	
+				setTimeout(() => {
+					this.analyser.getFloatFrequencyData(bufferArray);
+					alert(bufferArray);
+				}, 1000);
+				
+
+				// const bufferData1 = buffer.getChannelData(0);
+				// const bufferData2 = buffer.getChannelData(1);
+				// console.log(bufferData1.length);
+				// console.log(bufferData2.length);
+			});
 		}
+		request.send();
 
-		this.pause = () => {
-			cancelAnimationFrame(this.audioFrame);
-			if(!this.isSeekerActive) {
-				this.setState({ isPlaying: false });
-			}
-			this.count = 1;
-		}
+		// this.audio = document.createElement('audio');
+		// const source = document.createElement('source');
 
-		this.audio.onplay = this.play;
-		this.audio.onpause = this.pause;
-		this.audio.onended = this.pause;
+		// source.setAttribute('type', 'audio/mp3');
+		// this.audio.appendChild(source);
+		// this.refs.audioContainer.appendChild(this.audio);
+		// this.count = 1;
+
+		// this.play = () => {
+		// 	console.log(this.count);
+		// 	this.audioFrame = requestAnimationFrame(this.play);
+		// 	if(this.count % 10 == 0) {
+		// 		if(this.audio.duration > 0) {
+		// 			const seekerWidth = (this.audio.currentTime / this.audio.duration * 100) + '%';
+		// 			this.setState({ seekerWidth, isPlaying: true });
+		// 		}
+		// 	}
+		// 	this.count++;	
+		// }
+
+		// this.pause = () => {
+		// 	cancelAnimationFrame(this.audioFrame);
+		// 	if(!this.isSeekerActive) {
+		// 		this.setState({ isPlaying: false });
+		// 	}
+		// 	this.count = 1;
+		// }
+
+		// this.audio.onplay = this.play;
+		// this.audio.onpause = this.pause;
+		// this.audio.onended = this.pause;
 	}
 
 	getSeekerSVG() {
@@ -59,10 +95,10 @@ export default class MeariMobile extends Meari {
 	}
 
 	setTrack(track, voice) {
-		super.setTrack(track, voice);
-		this.audio.pause();
-		this.audio.src = this.src;
-		this.audio.play();
+		// super.setTrack(track, voice);
+		// this.audio.pause();
+		// this.audio.src = this.src;
+		// this.audio.play();
 	}
 
 	setVolume(e) {
