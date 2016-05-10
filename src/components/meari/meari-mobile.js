@@ -6,40 +6,7 @@ import Meari from './meari';
 export default class MeariMobile extends Meari {
 	componentDidMount() {
 		super.componentDidMount();
-
-		this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-		this.analyser = null;
-		this.source = null;
-
-		let bufferLength = 150;
-		let bufferOffset = 50;
-		this.bufferArray = new Uint8Array(bufferLength);
-
-		this.canvas = this.refs.visualizer;
-		this.stage = new createjs.Stage(this.canvas);
-		for(let i=0; i<bufferLength - bufferOffset; i++) {
-			const shape = new createjs.Shape();
-			shape.graphics.beginFill('#aec6cf').drawRect(this.canvas.width / (bufferLength - bufferOffset) * i, 0, this.canvas.width / (bufferLength - bufferOffset) / 3, 1);
-			
-			shape.alpha = 0;
-			shape.regX = 0.25;
-			shape.regY = 0.5;
-			
-			shape.snapToPixel = true;
-			shape.cache(this.canvas.width / (bufferLength - bufferOffset) * i, 0, this.canvas.width / (bufferLength - bufferOffset) / 3, 1);
-			this.stage.addChild(shape);
-		}
-
-		this.tick = (event) => {
-			this.analyser.getByteFrequencyData(this.bufferArray);
-			for(let i=0; i<bufferLength - bufferOffset; i++) {
-				const shape = this.stage.getChildAt(i);
-				shape.scaleY = this.bufferArray[i + bufferOffset] * 0.9;
-				shape.y = this.canvas.height / 2;
-				shape.alpha = (shape.scaleY / this.canvas.height) + 0.1;
-			}
-			this.stage.update(event);
-		}
+		this.initVisualizer(150, 50);
 		
 		// this.play = () => {
 		// 	console.log(this.count);
@@ -99,6 +66,6 @@ export default class MeariMobile extends Meari {
 		// 	this.audio.volume = 0;
 		// 	isMute = true;
 		// }
-		// this.setState({ isMute });
+		// this.setState({ isMㅎute });
 	}
 }

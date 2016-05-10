@@ -23,6 +23,37 @@ export default class Meari extends Component {
 		}
 	}
 
+	initVisualizer(bufferLength, bufferOffset) {
+		this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+		this.analyser = null;
+		this.source = null;
+		this.bufferArray = new Uint8Array(bufferLength);
+
+		let barWidth = 1;
+		this.canvas = this.refs.visualizer;
+		this.stage = new createjs.Stage(this.canvas);
+		for(let i=0; i<bufferLength - bufferOffset; i++) {
+			const shape = new createjs.Shape();
+			shape.graphics.beginFill('#aec6cf').drawRect(this.canvas.width / (bufferLength - bufferOffset) * i, 0, barWidth, 1);
+			shape.alpha = 0;
+			shape.regY = 0.5;
+			shape.snapToPixel = true;
+			shape.cache(this.canvas.width / (bufferLength - bufferOffset) * i, 0, barWidth, 1);
+			this.stage.addChild(shape);
+		}
+
+		this.tick = (event) => {
+			this.analyser.getByteFrequencyData(this.bufferArray);
+			for(let i=0; i<bufferLength - bufferOffset; i++) {
+				const shape = this.stage.getChildAt(i);
+				shape.scaleY = this.bufferArray[i + bufferOffset] * 0.9;
+				shape.y = this.canvas.height / 2;
+				shape.alpha = (shape.scaleY / this.canvas.height) + 0.1;
+			}
+			this.stage.update(event);
+		}
+	}
+
 	setTrack(track, voice, time) {
 		let src = 'assets/songs/' + track + '/' + track;
 		if(voice != 'all') {
