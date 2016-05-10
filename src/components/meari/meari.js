@@ -23,16 +23,36 @@ export default class Meari extends Component {
 		}
 	}
 
-	setTrack(track, voice) {
-		this.src = 'assets/songs/' + track + '/' + track;
+	setTrack(track, voice, time) {
+		let src = 'assets/songs/' + track + '/' + track;
 		if(voice != 'all') {
-			this.src += '_' + voice;
+			src += '_' + voice;
 		}
-		this.src += '.mp3';
-		this.setState({ track, voice, src: this.src, isPlaying: true });
+		src += '.mp3';
+		this.setState({ track, voice, src, isPlaying: true });
 		if(process.env.NODE_ENV == 'production') {
 			window.ga('send', 'event', voice, 'listen', track);
 		}
+		if(!this.analyser) {
+			this.analyser = this.audioContext.createAnalyser();
+		}
+		const request = new XMLHttpRequest();
+		request.open('GET', src, true);
+		request.responseType = 'arraybuffer';
+		request.onload = () => {
+			this.audioContext.decodeAudioData(request.response, (buffer) => {
+				if(this.source) {
+					this.source.disconnect();
+				}
+				this.source = this.audioContext.createBufferSource();
+				this.source.buffer = buffer;
+				this.source.connect(this.analyser);
+				this.source.connect(this.audioContext.destination);
+				this.source.start(time);
+				createjs.Ticker.addEventListener('tick', this.tick);
+			});
+		}
+		request.send();
 	}
 
 	downloadTrack() {

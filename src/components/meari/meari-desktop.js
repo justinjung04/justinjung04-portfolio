@@ -7,30 +7,32 @@ export default class MeariDesktop extends Meari {
 	componentDidMount() {
 		super.componentDidMount();
 
-		this.audioContext = new (window.AudioContext || window.webkitAudioContext)();		
-		this.analyser = this.audioContext.createAnalyser();
-		let bufferLength = 150;
+		this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+		this.analyser = null;
+		this.source = null;
+
+		let bufferLength = 250;
 		let bufferOffset = 50;
 		this.bufferArray = new Uint8Array(bufferLength);
 
+		let barWidth = 1;
 		this.canvas = this.refs.visualizer;
 		this.stage = new createjs.Stage(this.canvas);
 		for(let i=0; i<bufferLength - bufferOffset; i++) {
 			const shape = new createjs.Shape();
-			shape.graphics.beginFill('#aec6cf').drawRect(this.canvas.width / (bufferLength - bufferOffset) * i, 0, this.canvas.width / (bufferLength - bufferOffset) / 3, 1);
+			shape.graphics.beginFill('#aec6cf').drawRect(this.canvas.width / (bufferLength - bufferOffset) * i, 0, barWidth, 1);
 			
 			shape.alpha = 0;
 			shape.regX = 0.25;
 			shape.regY = 0.5;
 			
 			shape.snapToPixel = true;
-			shape.cache(this.canvas.width / (bufferLength - bufferOffset) * i, 0, this.canvas.width / (bufferLength - bufferOffset) / 3, 1);
+			shape.cache(this.canvas.width / (bufferLength - bufferOffset) * i, 0, barWidth, 1);
 			this.stage.addChild(shape);
 		}
 
 		this.tick = (event) => {
 			this.analyser.getByteFrequencyData(this.bufferArray);
-			console.log(this.bufferArray);
 			for(let i=0; i<bufferLength - bufferOffset; i++) {
 				const shape = this.stage.getChildAt(i);
 				shape.scaleY = this.bufferArray[i + bufferOffset] * 0.9;
@@ -38,19 +40,6 @@ export default class MeariDesktop extends Meari {
 				shape.alpha = (shape.scaleY / this.canvas.height) + 0.1;
 			}
 			this.stage.update(event);
-		};
-
-		console.log('this is desktop');
-
-		this.audioContext.onstatechange = () => {
-			switch(this.audioContext.state) {
-				case 'running':
-					createjs.Ticker.addEventListener('tick', this.tick);
-					break;
-				case 'suspended':
-					createjs.Ticker.removeEventListener('tick', this.tick);
-					break;
-			}
 		}
 		
 		// this.play = () => {
@@ -90,27 +79,6 @@ export default class MeariDesktop extends Meari {
 				<rect className='filled' x='0' y='45%' width={`${(this.state.isMute? '0' : this.state.volume * 100)}%`} height='10%' />
 			</svg>
 		);
-	}
-
-	setTrack(track, voice, time) {
-		super.setTrack(track, voice);
-		const request = new XMLHttpRequest();
-		request.open('GET', this.src, true);
-		request.responseType = 'arraybuffer';
-		request.onload = () => {
-			this.audioContext.decodeAudioData(request.response, (buffer) => {
-				if(this.source) {
-					this.source.disconnect();
-				}
-				this.source = this.audioContext.createBufferSource();
-				this.source.buffer = buffer;
-				console.log(buffer.getChannelData(0));
-				this.source.connect(this.analyser);
-				this.source.connect(this.audioContext.destination);
-				this.source.start(time);
-			});
-		}
-		request.send();
 	}
 
 	setVolume(e) {
