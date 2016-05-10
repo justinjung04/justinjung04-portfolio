@@ -13,20 +13,20 @@ $player-max-width: none;
 $player-min-width: 0;
 $player-height: 70%;
 
-$visualizer-height: 0;
-$visualizer-margin: 0;
+$visualizer-height: 25px;
+$visualizer-margin: 0 0 25px 0;
 
 $control-width: 100%;
 $control-max-width: none;
 $control-min-width: 0;
-$control-height: 100px;
+$control-height: 150px;
 
 $seeker-wrapper-padding: 0 10px;
 $volume-wrapper-padding: 0 10 0 0;
 $volume-icon-width: 30px;
 $volume-icon-padding: 0 0 0 10px;
 
-$list-height: calc(100% - 100px);
+$list-height: calc(100% - 150px);
 $list-padding: 0 10px 25% 1vw;
 $list-col-height: 10vw;
 $list-col-padding: 0 1%;

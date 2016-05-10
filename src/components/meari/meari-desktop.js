@@ -2,7 +2,6 @@ import './meari-desktop.scss';
 
 import React from 'react';
 import Meari from './meari';
-import d3 from 'd3';
 
 export default class MeariDesktop extends Meari {
 	componentDidMount() {
@@ -10,45 +9,69 @@ export default class MeariDesktop extends Meari {
 
 		this.audioContext = new (window.AudioContext || window.webkitAudioContext)();		
 		this.analyser = this.audioContext.createAnalyser();
+		let bufferLength = 150;
+		let bufferOffset = 50;
+		this.bufferArray = new Uint8Array(bufferLength);
 
-		const dataLength = 250;
-		const dataOffset = 50;
-		const dataArray = new Uint8Array(dataLength);
-
-		this.visualizer = d3.select('.visualizer')
-							.append('svg')
-							.attr('width', '100%')
-							.attr('height', 30);
-
-		this.visualizer.selectAll('rect')
-						.data(dataArray.subarray(dataOffset))
-						.enter()
-						.append('rect')
-						.attr('x', (d, i) => { return (i * 100 / (dataLength - dataOffset)) + '%'; })
-						.attr('width', (100 / (dataLength - dataOffset) / 2) + '%')
-						.attr('fill', '#aec6cf');
-
-		this.play = () => {
-			console.log(1);
-			this.audioFrame = requestAnimationFrame(this.play);
-			if(this.audio.duration > 0) {
-				this.analyser.getByteFrequencyData(dataArray);
-				this.visualizer.selectAll('rect')
-								.data(dataArray.subarray(dataOffset))
-								.attr('y', (d) => { return (50 - (d / 3)) + '%'; })
-								.attr('height', (d) => { return (d / 1.5) + '%'; })
-								.attr('opacity', (d) => { return d / 150; });
-				const seekerWidth = (this.audio.currentTime / this.audio.duration * 100) + '%';
-				this.setState({ seekerWidth, isPlaying: true });
-			}
+		this.canvas = this.refs.visualizer;
+		this.stage = new createjs.Stage(this.canvas);
+		for(let i=0; i<bufferLength - bufferOffset; i++) {
+			const shape = new createjs.Shape();
+			shape.graphics.beginFill('#aec6cf').drawRect(this.canvas.width / (bufferLength - bufferOffset) * i, 0, this.canvas.width / (bufferLength - bufferOffset) / 3, 1);
+			
+			shape.alpha = 0;
+			shape.regX = 0.25;
+			shape.regY = 0.5;
+			
+			shape.snapToPixel = true;
+			shape.cache(this.canvas.width / (bufferLength - bufferOffset) * i, 0, this.canvas.width / (bufferLength - bufferOffset) / 3, 1);
+			this.stage.addChild(shape);
 		}
 
-		this.pause = () => {
-			cancelAnimationFrame(this.audioFrame);
-			if(!this.isSeekerActive) {
-				this.setState({ isPlaying: false });
+		this.tick = (event) => {
+			this.analyser.getByteFrequencyData(this.bufferArray);
+			console.log(this.bufferArray);
+			for(let i=0; i<bufferLength - bufferOffset; i++) {
+				const shape = this.stage.getChildAt(i);
+				shape.scaleY = this.bufferArray[i + bufferOffset] * 0.9;
+				shape.y = this.canvas.height / 2;
+				shape.alpha = (shape.scaleY / this.canvas.height) + 0.1;
+			}
+			this.stage.update(event);
+		};
+
+		console.log('this is desktop');
+
+		this.audioContext.onstatechange = () => {
+			switch(this.audioContext.state) {
+				case 'running':
+					createjs.Ticker.addEventListener('tick', this.tick);
+					break;
+				case 'suspended':
+					createjs.Ticker.removeEventListener('tick', this.tick);
+					break;
 			}
 		}
+		
+		// this.play = () => {
+		// 	console.log(this.count);
+		// 	this.audioFrame = requestAnimationFrame(this.play);
+		// 	if(this.count % 10 == 0) {
+		// 		if(this.audio.duration > 0) {
+		// 			const seekerWidth = (this.audio.currentTime / this.audio.duration * 100) + '%';
+		// 			this.setState({ seekerWidth, isPlaying: true });
+		// 		}
+		// 	}
+		// 	this.count++;
+		// }
+
+		// this.pause = () => {
+		// 	cancelAnimationFrame(this.audioFrame);
+		// 	if(!this.isSeekerActive) {
+		// 		this.setState({ isPlaying: false });
+		// 	}
+		// 	this.count = 1;
+		// }
 	}
 
 	getSeekerSVG() {
@@ -69,31 +92,25 @@ export default class MeariDesktop extends Meari {
 		);
 	}
 
-	setTrack(track, voice) {
+	setTrack(track, voice, time) {
 		super.setTrack(track, voice);
-		if(this.source) {
-			this.audio.pause();
-			this.source.disconnect();
-			this.refs.audioContainer.removeChild(this.refs.audioContainer.childNodes[0]);
+		const request = new XMLHttpRequest();
+		request.open('GET', this.src, true);
+		request.responseType = 'arraybuffer';
+		request.onload = () => {
+			this.audioContext.decodeAudioData(request.response, (buffer) => {
+				if(this.source) {
+					this.source.disconnect();
+				}
+				this.source = this.audioContext.createBufferSource();
+				this.source.buffer = buffer;
+				console.log(buffer.getChannelData(0));
+				this.source.connect(this.analyser);
+				this.source.connect(this.audioContext.destination);
+				this.source.start(time);
+			});
 		}
-
-		this.audio = document.createElement('audio');
-		const source = document.createElement('source');
-
-		source.setAttribute('src', this.src);
-		source.setAttribute('type', 'audio/mp3');
-		this.audio.appendChild(source);
-		this.refs.audioContainer.appendChild(this.audio);
-
-		this.source = this.audioContext.createMediaElementSource(this.audio);
-		this.source.connect(this.analyser);
-		this.source.connect(this.audioContext.destination);
-
-		this.audio.volume = 1;
-		this.audio.play();
-		this.audio.onplay = this.play;
-		this.audio.onpause = this.pause;
-		this.audio.onended = this.pause;
+		request.send();
 	}
 
 	setVolume(e) {

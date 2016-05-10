@@ -43,9 +43,12 @@ export default class Meari extends Component {
 
 	togglePlay() {
 		if(this.state.isPlaying) {
-			this.audio.pause();
+			// this.audioContext.suspend();
+			createjs.Ticker.removeEventListener('tick', this.tick);
+			console.log('pause');
 		} else {
-			this.audio.play();
+			// this.audioContext.resume();
+			console.log('play');
 		}
 	}
 
@@ -125,7 +128,7 @@ export default class Meari extends Component {
 							? <div className='no-song'>PLEASE SELECT A SONG</div>
 							: false
 						}
-						<div className='visualizer' ref='visualizer'></div>
+						<canvas className='visualizer' ref='visualizer'></canvas>
 						<div className='top'>
 							<div className='seeker-wrapper'>
 								{this.getSeekerSVG()}
@@ -142,7 +145,7 @@ export default class Meari extends Component {
 					</div>
 					<ul className='list'>
 		                {songs.map((song, songKey) => {
-		                	const onClickAll = this.setTrack.bind(this, song.track, 'all');
+		                	const onClickAll = this.setTrack.bind(this, song.track, 'all', 0);
 				            return (
 				                <li key={songKey} className={(this.state.track == song.track) ? 'active-song' : ''}>
 				                	<i className='col fa fa-play'></i>
@@ -151,7 +154,7 @@ export default class Meari extends Component {
 				                	<span className={`col ${(this.state.voice == 'all') ? 'active-voice' : ''}`} onClick={onClickAll}>All</span>
 				                	{this.voices.map((voice, voiceKey) => {
 				                		return (
-				                			<span key={voiceKey} className={`col ${(this.state.voice == voice) ? 'active-voice' : ''} ${(song.voices.indexOf(voice) < 0) ? 'disabled' : ''}`} onClick={(song.voices.indexOf(voice) > -1 ? this.setTrack.bind(this, song.track, voice) : '')}>{voice}</span>
+				                			<span key={voiceKey} className={`col ${(this.state.voice == voice) ? 'active-voice' : ''} ${(song.voices.indexOf(voice) < 0) ? 'disabled' : ''}`} onClick={(song.voices.indexOf(voice) > -1 ? this.setTrack.bind(this, song.track, voice, 0) : '')}>{voice}</span>
 				                		);
 				                	})}
 				                </li>
