@@ -11,10 +11,7 @@ export default class MeariDesktop extends Meari {
 
 	getSeekerSVG() {
 		return (
-			<svg className='seeker' ref='seeker' onMouseDown={this.seekerStart.bind(this)} onMouseMove={this.seekerMove.bind(this)} onMouseUp={this.seekerEnd.bind(this)} onMouseLeave={this.seekerEnd.bind(this)}>
-				<rect className='empty' x='0' y='45%' width='100%' height='10%' />
-				<rect className='filled' x='0' y='45%' width={this.state.seekerWidth} height='10%' />
-			</svg>
+			<canvas className='seeker' ref='seeker' onMouseDown={this.seekerStart.bind(this)} onMouseMove={this.seekerMove.bind(this)} onMouseUp={this.seekerEnd.bind(this)} onMouseLeave={this.seekerEnd.bind(this)}></canvas>
 		);
 	}
 

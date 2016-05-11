@@ -30,27 +30,49 @@ export default class Meari extends Component {
 		this.bufferArray = new Uint8Array(bufferLength);
 
 		let barWidth = 1;
-		this.canvas = this.refs.visualizer;
-		this.visualizer = new createjs.Stage(this.canvas);
+		this.visualizerCanvas = this.refs.visualizer;
+		this.visualizer = new createjs.Stage(this.visualizerCanvas);
 		for(let i = 0; i < bufferLength - bufferOffset; i++) {
 			const shape = new createjs.Shape();
-			shape.graphics.beginFill('#aec6cf').drawRect(this.canvas.width / (bufferLength - bufferOffset) * i, 0, barWidth, 1);
+			shape.graphics.beginFill('#aec6cf').drawRect(this.visualizerCanvas.width / (bufferLength - bufferOffset) * i, 0, barWidth, 1);
 			shape.alpha = 0;
 			shape.regY = 0.5;
 			shape.snapToPixel = true;
-			shape.cache(this.canvas.width / (bufferLength - bufferOffset) * i, 0, barWidth, 1);
+			shape.cache(this.visualizerCanvas.width / (bufferLength - bufferOffset) * i, 0, barWidth, 1);
 			this.visualizer.addChild(shape);
 		}
+
+		this.seekerCanvas = this.refs.seeker;
+		this.seeker = new createjs.Stage(this.seekerCanvas);
+		
+		const seekerEmpty = new createjs.Shape();
+		seekerEmpty.graphics.beginFill('#aec6cf').drawRect(0, this.seekerCanvas.height / 2, this.seekerCanvas.width, this.seekerCanvas.height / 10);
+		seekerEmpty.regY = this.seekerCanvas.height / 20;
+		seekerEmpty.snapToPixel = true;
+		this.seeker.addChild(seekerEmpty);
+
+		const seekerFilled = new createjs.Shape();
+		seekerFilled.graphics.beginFill('#526972').drawRect(-this.seekerCanvas.width, this.seekerCanvas.height / 2, this.seekerCanvas.width, this.seekerCanvas.height / 10);
+		seekerFilled.regY = this.seekerCanvas.height / 20;
+		seekerFilled.snapToPixel = true;
+		this.seeker.addChild(seekerFilled);
 
 		this.tick = () => {
 			this.analyser.getByteFrequencyData(this.bufferArray);
 			for(let i = 0; i < bufferLength - bufferOffset; i++) {
 				const shape = this.visualizer.getChildAt(i);
 				shape.scaleY = this.bufferArray[i + bufferOffset] * 0.9;
-				shape.y = this.canvas.height / 2;
-				shape.alpha = (shape.scaleY / this.canvas.height) + 0.1;
+				shape.y = this.visualizerCanvas.height / 2;
+				shape.alpha = (shape.scaleY / this.visualizerCanvas.height) + 0.1;
 			}
+			const seekerFilled = this.seeker.getChildAt(1);
+			const passedTime = (new Date().getTime()) / 1000 - this.startTime;
+			this.startTime = (new Date().getTime()) / 1000;
+			this.currentTime += passedTime;
+			seekerFilled.x = this.currentTime / this.source.buffer.duration * this.seekerCanvas.width;
+
 			this.visualizer.update();
+			this.seeker.update();
 		}
 	}
 
@@ -80,14 +102,15 @@ export default class Meari extends Component {
 				if(this.source) {
 					this.source.disconnect();
 				}
+				this.currentTime = time;
 				this.source = this.audioContext.createBufferSource();
 				this.source.buffer = buffer;
 				this.source.connect(this.analyser);
 				this.source.connect(this.audioContext.destination);
 				this.source.start(0, time);
 				this.source.onended = () => {
-					this.pause();
 					this.ended = true;
+					this.pause();
 				};
 				if(this.state.isPlaying || time == 0) {
 					this.start();
@@ -107,7 +130,7 @@ export default class Meari extends Component {
 		this.audioContext.resume();
 		this.setState({ isPlaying: true });
 		createjs.Ticker.addEventListener('tick', this.tick);
-
+		this.startTime = (new Date().getTime()) / 1000;
 		if(this.ended) {
 			this.setTrack(this.state.track, this.state.voice, 0);
 			this.ended = false;
@@ -118,12 +141,16 @@ export default class Meari extends Component {
 		this.audioContext.suspend();
 		this.setState({ isPlaying: false });
 		createjs.Ticker.removeEventListener('tick', this.tick);
-
 		for(let i = 0; i < 150; i++) {
 			const shape = this.visualizer.getChildAt(i);
 			shape.alpha = 0;
 		}
 		this.visualizer.update();
+		if(this.ended) {
+			const seekerFilled = this.seeker.getChildAt(1);
+			seekerFilled.x = this.seekerCanvas.width;
+			this.seeker.update();
+		}
 	}
 
 	seekerStart(e) {
