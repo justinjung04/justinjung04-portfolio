@@ -6,15 +6,12 @@ import Meari from './meari';
 export default class MeariMobile extends Meari {
 	componentDidMount() {
 		super.componentDidMount();
-		this.initVisualizer(150, 50);
+		this.init(150, 50);
 	}
 
 	getSeekerSVG() {
 		return (
-			<svg className='seeker' ref='seeker' onTouchStart={this.seekerStart.bind(this)} onTouchMove={this.seekerMove.bind(this)} onTouchEnd={this.seekerEnd.bind(this)}>
-				<rect className='empty' x='0' y='45%' width='100%' height='10%' />
-				<rect className='filled' x='0' y='45%' width={this.state.seekerWidth} height='10%' />
-			</svg>
+			<canvas className='seeker' ref='seeker' onTouchStart={this.seekerStart.bind(this)} onTouchMove={this.seekerMove.bind(this)} onTouchEnd={this.seekerEnd.bind(this)}></canvas>
 		);
 	}
 

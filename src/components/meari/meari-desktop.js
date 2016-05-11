@@ -6,7 +6,7 @@ import Meari from './meari';
 export default class MeariDesktop extends Meari {
 	componentDidMount() {
 		super.componentDidMount();
-		this.initVisualizer(200, 50);
+		this.init(200, 50);
 	}
 
 	getSeekerSVG() {

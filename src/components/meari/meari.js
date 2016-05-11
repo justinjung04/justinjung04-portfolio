@@ -10,8 +10,7 @@ export default class Meari extends Component {
 			src: '',
 			volume: 0.5,
 			isPlaying: false,
-			isMute: false,
-			seekerWidth: 0
+			isMute: false
 		};
 		this.voices = ['soprano', 'alto', 'tenor', 'bass'];
 	}
@@ -23,11 +22,18 @@ export default class Meari extends Component {
 		}
 	}
 
-	initVisualizer(bufferLength, bufferOffset) {
+	componentWillUnmount() {
+		createjs.Ticker.removeEventListener('tick', this.tick);	
+	}
+
+	init(bufferLength, bufferOffset) {
 		this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
 		this.analyser = null;
+		this.gain = null;
 		this.source = null;
 		this.bufferArray = new Uint8Array(bufferLength);
+		this.dummyArray = new Uint8Array(bufferLength);
+		this.percentage = 0;
 
 		let barWidth = 1;
 		this.visualizerCanvas = this.refs.visualizer;
@@ -58,40 +64,59 @@ export default class Meari extends Component {
 		this.seeker.addChild(seekerFilled);
 
 		this.tick = () => {
-			this.analyser.getByteFrequencyData(this.bufferArray);
-			for(let i = 0; i < bufferLength - bufferOffset; i++) {
-				const shape = this.visualizer.getChildAt(i);
-				shape.scaleY = this.bufferArray[i + bufferOffset] * 0.9;
-				shape.y = this.visualizerCanvas.height / 2;
-				shape.alpha = (shape.scaleY / this.visualizerCanvas.height) + 0.1;
+			if(this.analyser && this.source) {
+				if(this.isSeekerActive) {
+					this.seeker.getChildAt(1).x = this.seekerTime / this.source.buffer.duration * this.seekerCanvas.width;
+					this.seeker.update();
+				}
+				if(!this.isSeekerActive) {
+					this.analyser.getByteFrequencyData(this.bufferArray);
+					this.rectHeight = 0.9;
+					for(let i = 0; i < bufferLength - bufferOffset; i++) {
+						const shape = this.visualizer.getChildAt(i);
+						shape.scaleY = this.bufferArray[i + bufferOffset] * this.rectHeight;
+						shape.y = this.visualizerCanvas.height / 2;
+						shape.alpha = (shape.scaleY / this.visualizerCanvas.height) + 0.1;
+					}
+					this.visualizer.update();
+				}
+				if(this.state.isPlaying) {
+					this.seeker.getChildAt(1).x = Math.min(1, this.seekerTime / this.source.buffer.duration) * this.seekerCanvas.width;
+					const updatedTime = (new Date().getTime()) / 1000;
+					this.seekerTime += updatedTime - this.currentTime;
+					this.currentTime = updatedTime;
+					this.seeker.update();
+				}
 			}
-			const seekerFilled = this.seeker.getChildAt(1);
-			const passedTime = (new Date().getTime()) / 1000 - this.startTime;
-			this.startTime = (new Date().getTime()) / 1000;
-			this.currentTime += passedTime;
-			seekerFilled.x = this.currentTime / this.source.buffer.duration * this.seekerCanvas.width;
-
-			this.visualizer.update();
-			this.seeker.update();
 		}
+		createjs.Ticker.addEventListener('tick', this.tick);
 	}
 
-	setTrack(track, voice, time) {
-		if(process.env.NODE_ENV == 'production') {
-			window.ga('send', 'event', voice, 'listen', track);
-		}
-
+	play(time, isNew, track, voice) {
 		if(!this.analyser) {
 			this.analyser = this.audioContext.createAnalyser();
+			this.analyser.connect(this.audioContext.destination);
+		}
+
+		if(!this.gain) {
+			this.gain = this.audioContext.createGain();
+			this.gain.connect(this.analyser);
+		}
+
+		if(this.source) {
+			this.source.disconnect();
 		}
 
 		let src;
-		if(track == this.state.track) {
-			src = this.state.src;
-		} else {
+		if(isNew) {
+			if(process.env.NODE_ENV == 'production') {
+				window.ga('send', 'event', voice, 'listen', track);
+			}
 			src = 'assets/songs/' + track + '/' + track;
 			src += (voice != 'all') ? '_' + voice + '.mp3' : '.mp3';
 			this.setState({ track, voice, src });
+		} else {
+			src = this.state.src;
 		}
 
 		const request = new XMLHttpRequest();
@@ -99,25 +124,28 @@ export default class Meari extends Component {
 		request.responseType = 'arraybuffer';
 		request.onload = () => {
 			this.audioContext.decodeAudioData(request.response, (buffer) => {
-				if(this.source) {
-					this.source.disconnect();
-				}
-				this.currentTime = time;
+				this.seekerTime = time;
+				this.currentTime = new Date().getTime() / 1000;
 				this.source = this.audioContext.createBufferSource();
 				this.source.buffer = buffer;
-				this.source.connect(this.analyser);
-				this.source.connect(this.audioContext.destination);
+				this.source.connect(this.gain);
 				this.source.start(0, time);
 				this.source.onended = () => {
-					this.ended = true;
-					this.pause();
+					this.source.ended = true;
+					const seekerFilled = this.seeker.getChildAt(1);
+					seekerFilled.x = this.seekerCanvas.width;
+					this.seeker.update();
+					this.setState({ isPlaying: false });
 				};
-				if(this.state.isPlaying || time == 0) {
-					this.start();
-				}
+				this.setState({ isPlaying: true });
 			});
 		}
 		request.send();
+	}
+
+	pause() {
+		this.source.disconnect();
+		this.setState({ isPlaying: false });
 	}
 
 	downloadTrack() {
@@ -125,38 +153,10 @@ export default class Meari extends Component {
 			window.ga('send', 'event', this.state.voice, 'download', this.state.track);
 		}
 	}
-
-	start() {
-		this.audioContext.resume();
-		this.setState({ isPlaying: true });
-		createjs.Ticker.addEventListener('tick', this.tick);
-		this.startTime = (new Date().getTime()) / 1000;
-		if(this.ended) {
-			this.setTrack(this.state.track, this.state.voice, 0);
-			this.ended = false;
-		}
-	}
-
-	pause() {
-		this.audioContext.suspend();
-		this.setState({ isPlaying: false });
-		createjs.Ticker.removeEventListener('tick', this.tick);
-		for(let i = 0; i < 150; i++) {
-			const shape = this.visualizer.getChildAt(i);
-			shape.alpha = 0;
-		}
-		this.visualizer.update();
-		if(this.ended) {
-			const seekerFilled = this.seeker.getChildAt(1);
-			seekerFilled.x = this.seekerCanvas.width;
-			this.seeker.update();
-		}
-	}
-
 	seekerStart(e) {
 		this.isSeekerActive = true;
 		this.setSeeker(e);
-		this.audioContext.suspend();
+		this.source.disconnect();
 	}
 
 	seekerMove(e) {
@@ -166,10 +166,10 @@ export default class Meari extends Component {
 	}
 
 	seekerEnd() {
-		if(this.isSeekerActive) {
-			this.setTrack(this.state.track, this.state.voice, this.currentTime);
-			if(this.state.isPlaying) {
-				this.audioContext.resume();
+		if(this.isSeekerActive && (this.state.isPlaying || this.source.ended)) {
+			this.play(this.seekerTime, false);
+			if(this.source.ended) {
+				this.setState({ isPlaying: true });
 			}
 		}
 		this.isSeekerActive = false;
@@ -180,7 +180,7 @@ export default class Meari extends Component {
 		const position = clientX - this.refs.seeker.getBoundingClientRect().left;
 		const width = this.refs.seeker.getBoundingClientRect().width;
 		const percentage = Math.max(Math.min(position / width, 1), 0);
-		this.currentTime = percentage * this.source.buffer.duration;
+		this.seekerTime = percentage * this.source.buffer.duration;
 	}
 
 	volumeStart(e) {
@@ -241,13 +241,13 @@ export default class Meari extends Component {
 							</div>
 						</div>
 						<div className='bottom'>
-							<div className='btn play' onClick={this.state.isPlaying ? this.pause.bind(this) : this.start.bind(this)}>{(this.state.isPlaying)? 'PAUSE' : 'PLAY'}</div>
+							<div className='btn play' onClick={this.pause.bind(this)}>{(this.state.isPlaying)? 'PAUSE' : 'PLAY'}</div>
 							<a className='btn download' href={this.state.src} download={this.state.src.split('/')[3]} onClick={this.downloadTrack.bind(this)}>DOWNLOAD</a>
 						</div>
 					</div>
 					<ul className='list'>
 		                {songs.map((song, songKey) => {
-		                	const onClickAll = this.setTrack.bind(this, song.track, 'all', 0);
+		                	const onClickAll = this.play.bind(this, 0, true, song.track, 'all');
 				            return (
 				                <li key={songKey} className={(this.state.track == song.track) ? 'active-song' : ''}>
 				                	<i className='col fa fa-play'></i>
@@ -256,7 +256,7 @@ export default class Meari extends Component {
 				                	<span className={`col ${(this.state.voice == 'all') ? 'active-voice' : ''}`} onClick={onClickAll}>All</span>
 				                	{this.voices.map((voice, voiceKey) => {
 				                		return (
-				                			<span key={voiceKey} className={`col ${(this.state.voice == voice) ? 'active-voice' : ''} ${(song.voices.indexOf(voice) < 0) ? 'disabled' : ''}`} onClick={(song.voices.indexOf(voice) > -1 ? this.setTrack.bind(this, song.track, voice, 0) : '')}>{voice}</span>
+				                			<span key={voiceKey} className={`col ${(this.state.voice == voice) ? 'active-voice' : ''} ${(song.voices.indexOf(voice) < 0) ? 'disabled' : ''}`} onClick={(song.voices.indexOf(voice) > -1 ? this.play.bind(this, 0, true, song.track, voice) : '')}>{voice}</span>
 				                		);
 				                	})}
 				                </li>
