@@ -62,14 +62,14 @@ export default class Meari extends Component {
 		seekerFilled.regY = this.seekerCanvas.height / 20;
 		seekerFilled.snapToPixel = true;
 		this.seeker.addChild(seekerFilled);
+		this.seeker.update();
 
 		this.tick = () => {
 			if(this.analyser && this.source) {
 				if(this.isSeekerActive) {
 					this.seeker.getChildAt(1).x = this.seekerTime / this.source.buffer.duration * this.seekerCanvas.width;
 					this.seeker.update();
-				}
-				if(!this.isSeekerActive) {
+				} else {
 					this.analyser.getByteFrequencyData(this.bufferArray);
 					this.rectHeight = 0.9;
 					for(let i = 0; i < bufferLength - bufferOffset; i++) {
@@ -105,6 +105,7 @@ export default class Meari extends Component {
 
 		if(this.source) {
 			this.source.disconnect();
+			this.source.onended = null;
 		}
 
 		let src;
