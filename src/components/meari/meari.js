@@ -23,46 +23,13 @@ export default class Meari extends Component {
 	}
 
 	componentWillUnmount() {
+		this.audioContext.close();
 		createjs.Ticker.removeEventListener('tick', this.tick);	
 	}
 
 	init(bufferLength, bufferOffset) {
-		this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-		this.analyser = null;
-		this.gain = null;
-		this.source = null;
-		this.bufferArray = new Uint8Array(bufferLength);
-		this.dummyArray = new Uint8Array(bufferLength);
-		this.percentage = 0;
-
-		let barWidth = 1;
-		this.visualizerCanvas = this.refs.visualizer;
-		this.visualizer = new createjs.Stage(this.visualizerCanvas);
-		for(let i = 0; i < bufferLength - bufferOffset; i++) {
-			const shape = new createjs.Shape();
-			shape.graphics.beginFill('#aec6cf').drawRect(this.visualizerCanvas.width / (bufferLength - bufferOffset) * i, 0, barWidth, 1);
-			shape.alpha = 0;
-			shape.regY = 0.5;
-			shape.snapToPixel = true;
-			shape.cache(this.visualizerCanvas.width / (bufferLength - bufferOffset) * i, 0, barWidth, 1);
-			this.visualizer.addChild(shape);
-		}
-
-		this.seekerCanvas = this.refs.seeker;
-		this.seeker = new createjs.Stage(this.seekerCanvas);
-		
-		const seekerEmpty = new createjs.Shape();
-		seekerEmpty.graphics.beginFill('#aec6cf').drawRect(0, this.seekerCanvas.height / 2, this.seekerCanvas.width, this.seekerCanvas.height / 10);
-		seekerEmpty.regY = this.seekerCanvas.height / 20;
-		seekerEmpty.snapToPixel = true;
-		this.seeker.addChild(seekerEmpty);
-
-		const seekerFilled = new createjs.Shape();
-		seekerFilled.graphics.beginFill('#526972').drawRect(-this.seekerCanvas.width, this.seekerCanvas.height / 2, this.seekerCanvas.width, this.seekerCanvas.height / 10);
-		seekerFilled.regY = this.seekerCanvas.height / 20;
-		seekerFilled.snapToPixel = true;
-		this.seeker.addChild(seekerFilled);
-		this.seeker.update();
+		this.initVisualiser(bufferLength, bufferOffset);
+		this.initSeeker();
 
 		this.tick = () => {
 			if(this.analyser && this.source) {
@@ -79,20 +46,62 @@ export default class Meari extends Component {
 						shape.alpha = (shape.scaleY / this.visualizerCanvas.height) + 0.1;
 					}
 					this.visualizer.update();
-				}
-				if(this.state.isPlaying) {
-					this.seeker.getChildAt(1).x = Math.min(1, this.seekerTime / this.source.buffer.duration) * this.seekerCanvas.width;
-					const updatedTime = (new Date().getTime()) / 1000;
-					this.seekerTime += updatedTime - this.currentTime;
-					this.currentTime = updatedTime;
-					this.seeker.update();
+
+					if(this.source.onended != null) {
+						this.seeker.getChildAt(1).x = Math.min(1, this.seekerTime / this.source.buffer.duration) * this.seekerCanvas.width;
+						const updatedTime = (new Date().getTime()) / 1000;
+						this.seekerTime += updatedTime - this.currentTime;
+						this.currentTime = updatedTime;
+						this.seeker.update();
+					}
 				}
 			}
 		}
+
+		this.bufferArray = new Uint8Array(bufferLength);
 		createjs.Ticker.addEventListener('tick', this.tick);
 	}
 
+	initVisualiser(bufferLength, bufferOffset) {
+		let barWidth = 1;
+		this.visualizerCanvas = this.refs.visualizer;
+		this.visualizer = new createjs.Stage(this.visualizerCanvas);
+		for(let i = 0; i < bufferLength - bufferOffset; i++) {
+			const shape = new createjs.Shape();
+			shape.graphics.beginFill('#aec6cf').drawRect(this.visualizerCanvas.width / (bufferLength - bufferOffset) * i, 0, barWidth, 1);
+			shape.alpha = 0;
+			shape.regY = 0.5;
+			shape.snapToPixel = true;
+			shape.cache(this.visualizerCanvas.width / (bufferLength - bufferOffset) * i, 0, barWidth, 1);
+			this.visualizer.addChild(shape);
+		}
+	}
+
+	initSeeker() {
+		this.seekerCanvas = this.refs.seeker;
+		this.seeker = new createjs.Stage(this.seekerCanvas);
+		const seekerEmpty = new createjs.Shape();
+		seekerEmpty.graphics.beginFill('#aec6cf').drawRect(0, this.seekerCanvas.height / 2, this.seekerCanvas.width, this.seekerCanvas.height / 10);
+		seekerEmpty.regY = this.seekerCanvas.height / 20;
+		seekerEmpty.snapToPixel = true;
+		const seekerFilled = new createjs.Shape();
+		seekerFilled.graphics.beginFill('#526972').drawRect(-this.seekerCanvas.width, this.seekerCanvas.height / 2, this.seekerCanvas.width, this.seekerCanvas.height / 10);
+		seekerFilled.regY = this.seekerCanvas.height / 20;
+		seekerFilled.snapToPixel = true;
+		this.seeker.addChild(seekerEmpty);
+		this.seeker.addChild(seekerFilled);
+		this.seeker.update();
+	}
+
 	play(time, isNew, track, voice) {
+		if(this.state.src == '') {
+			this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+			if(this.audioContext.sampleRate == 48000) {
+				this.audioContext.close();
+				this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+			}
+		}
+
 		if(!this.analyser) {
 			this.analyser = this.audioContext.createAnalyser();
 			this.analyser.connect(this.audioContext.destination);
@@ -103,10 +112,7 @@ export default class Meari extends Component {
 			this.gain.connect(this.analyser);
 		}
 
-		if(this.source) {
-			this.source.disconnect();
-			this.source.onended = null;
-		}
+		this.pause();
 
 		let src;
 		if(isNew) {
@@ -132,7 +138,6 @@ export default class Meari extends Component {
 				this.source.connect(this.gain);
 				this.source.start(0, time);
 				this.source.onended = () => {
-					this.source.ended = true;
 					const seekerFilled = this.seeker.getChildAt(1);
 					seekerFilled.x = this.seekerCanvas.width;
 					this.seeker.update();
@@ -145,8 +150,10 @@ export default class Meari extends Component {
 	}
 
 	pause() {
-		this.source.disconnect();
-		this.setState({ isPlaying: false });
+		if(this.source) {
+			this.source.disconnect();
+			this.source.onended = null;
+		}
 	}
 
 	downloadTrack() {
@@ -167,9 +174,9 @@ export default class Meari extends Component {
 	}
 
 	seekerEnd() {
-		if(this.isSeekerActive && (this.state.isPlaying || this.source.ended)) {
+		if(this.isSeekerActive && (this.state.isPlaying || this.source.onended != null)) {
 			this.play(this.seekerTime, false);
-			if(this.source.ended) {
+			if(this.source.onended != null) {
 				this.setState({ isPlaying: true });
 			}
 		}
