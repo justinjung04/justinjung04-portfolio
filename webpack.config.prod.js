@@ -8,7 +8,8 @@ module.exports = {
     entry: {
         device: './src/device.js',
         desktop: './src/app.desktop.js',
-        mobile: './src/app.mobile.js'
+        mobile: './src/app.mobile.js',
+        nosupport: './src/app.nosupport.js'
     },
     output: {
         path: path.join(__dirname, 'dist'),

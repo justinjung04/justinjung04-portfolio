@@ -14,7 +14,12 @@ module.exports = {
             'eventsource-polyfill', // necessary for hot reloading with IE
             'webpack-hot-middleware/client',
             './src/app.mobile.js'
-        ]
+        ],
+        nosupport: [
+            'eventsource-polyfill', // necessary for hot reloading with IE
+            'webpack-hot-middleware/client',
+            './src/app.nosupport.js'
+        ],
     },
     output: {
         path: path.join(__dirname, 'dev'), // path to where webpack will build
