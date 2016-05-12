@@ -23,7 +23,9 @@ export default class Meari extends Component {
 	}
 
 	componentWillUnmount() {
-		this.audioContext.close();
+		if(this.audioContext.close) {
+			this.audioContext.close();	
+		}
 		createjs.Ticker.removeEventListener('tick', this.tick);	
 	}
 
@@ -36,7 +38,7 @@ export default class Meari extends Component {
 				if(this.isSeekerActive) {
 					this.seeker.getChildAt(1).x = this.seekerTime / this.source.buffer.duration * this.seekerCanvas.width;
 					this.seeker.update();
-				} else {
+				} else if(this.state.isPlaying) {
 					this.analyser.getByteFrequencyData(this.bufferArray);
 					this.rectHeight = 0.9;
 					for(let i = 0; i < bufferLength - bufferOffset; i++) {
@@ -96,8 +98,10 @@ export default class Meari extends Component {
 	play(time, isNew, track, voice) {
 		if(this.state.src == '') {
 			this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-			if(this.audioContext.sampleRate == 48000) {
-				this.audioContext.close();
+			if(this.audioContext.sampleRate != 44100) {
+				if(this.audioContext.close) {
+					this.audioContext.close();	
+				}
 				this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
 			}
 		}
@@ -112,7 +116,10 @@ export default class Meari extends Component {
 			this.gain.connect(this.analyser);
 		}
 
-		this.pause();
+		if(this.source) {
+			this.source.disconnect();
+			this.source.onended = null;
+		}
 
 		let src;
 		if(isNew) {
@@ -131,6 +138,7 @@ export default class Meari extends Component {
 		request.responseType = 'arraybuffer';
 		request.onload = () => {
 			this.audioContext.decodeAudioData(request.response, (buffer) => {
+				console.log(buffer.sampleRate);
 				this.seekerTime = time;
 				this.currentTime = new Date().getTime() / 1000;
 				this.source = this.audioContext.createBufferSource();
@@ -150,10 +158,9 @@ export default class Meari extends Component {
 	}
 
 	pause() {
-		if(this.source) {
-			this.source.disconnect();
-			this.source.onended = null;
-		}
+		this.source.disconnect();
+		this.source.onended = null;
+		this.setState({ isPlaying: false });
 	}
 
 	downloadTrack() {
