@@ -38,23 +38,22 @@ export default class Meari extends Component {
 				if(this.isSeekerActive) {
 					this.seeker.getChildAt(1).x = this.seekerTime / this.source.buffer.duration * this.seekerCanvas.width;
 					this.seeker.update();
-				} else if(this.state.isPlaying) {
+				} else if(this.source.onended != null) {
 					this.analyser.getByteFrequencyData(this.bufferArray);
-					this.rectHeight = 0.9;
 					for(let i = 0; i < bufferLength - bufferOffset; i++) {
 						const shape = this.visualizer.getChildAt(i);
-						shape.scaleY = this.bufferArray[i + bufferOffset] * this.rectHeight;
+						shape.scaleY = this.bufferArray[i + bufferOffset] * 0.9;
 						shape.y = this.visualizerCanvas.height / 2;
 						shape.alpha = (shape.scaleY / this.visualizerCanvas.height) + 0.1;
 					}
 					this.visualizer.update();
 
-					if(this.source.onended != null) {
+					if(this.state.isPlaying) {
 						this.seeker.getChildAt(1).x = Math.min(1, this.seekerTime / this.source.buffer.duration) * this.seekerCanvas.width;
 						const updatedTime = (new Date().getTime()) / 1000;
 						this.seekerTime += updatedTime - this.currentTime;
 						this.currentTime = updatedTime;
-						this.seeker.update();
+						this.seeker.update();	
 					}
 				}
 			}
@@ -95,7 +94,7 @@ export default class Meari extends Component {
 		this.seeker.update();
 	}
 
-	play(time, isNew, track, voice) {
+	play(isNew, track, voice) {
 		if(this.state.src == '') {
 			this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
 			if(this.audioContext.sampleRate != 44100) {
@@ -129,6 +128,7 @@ export default class Meari extends Component {
 			src = 'assets/songs/' + track + '/' + track;
 			src += (voice != 'all') ? '_' + voice + '.mp3' : '.mp3';
 			this.setState({ track, voice, src });
+			this.seekerTime = 0;
 		} else {
 			src = this.state.src;
 		}
@@ -138,17 +138,16 @@ export default class Meari extends Component {
 		request.responseType = 'arraybuffer';
 		request.onload = () => {
 			this.audioContext.decodeAudioData(request.response, (buffer) => {
-				console.log(buffer.sampleRate);
-				this.seekerTime = time;
 				this.currentTime = new Date().getTime() / 1000;
 				this.source = this.audioContext.createBufferSource();
 				this.source.buffer = buffer;
 				this.source.connect(this.gain);
-				this.source.start(0, time);
+				this.source.start(0, this.seekerTime);
 				this.source.onended = () => {
 					const seekerFilled = this.seeker.getChildAt(1);
 					seekerFilled.x = this.seekerCanvas.width;
 					this.seeker.update();
+					this.seekerTime = 0;
 					this.setState({ isPlaying: false });
 				};
 				this.setState({ isPlaying: true });
@@ -182,7 +181,7 @@ export default class Meari extends Component {
 
 	seekerEnd() {
 		if(this.isSeekerActive && (this.state.isPlaying || this.source.onended != null)) {
-			this.play(this.seekerTime, false);
+			this.play(false);
 			if(this.source.onended != null) {
 				this.setState({ isPlaying: true });
 			}
@@ -256,13 +255,13 @@ export default class Meari extends Component {
 							</div>
 						</div>
 						<div className='bottom'>
-							<div className='btn play' onClick={this.pause.bind(this)}>{(this.state.isPlaying)? 'PAUSE' : 'PLAY'}</div>
+							<div className='btn play' onClick={this.state.isPlaying ? this.pause.bind(this) : this.play.bind(this, false)}>{(this.state.isPlaying)? 'PAUSE' : 'PLAY'}</div>
 							<a className='btn download' href={this.state.src} download={this.state.src.split('/')[3]} onClick={this.downloadTrack.bind(this)}>DOWNLOAD</a>
 						</div>
 					</div>
 					<ul className='list'>
 		                {songs.map((song, songKey) => {
-		                	const onClickAll = this.play.bind(this, 0, true, song.track, 'all');
+		                	const onClickAll = this.play.bind(this, true, song.track, 'all');
 				            return (
 				                <li key={songKey} className={(this.state.track == song.track) ? 'active-song' : ''}>
 				                	<i className='col fa fa-play'></i>
@@ -271,7 +270,7 @@ export default class Meari extends Component {
 				                	<span className={`col ${(this.state.voice == 'all') ? 'active-voice' : ''}`} onClick={onClickAll}>All</span>
 				                	{this.voices.map((voice, voiceKey) => {
 				                		return (
-				                			<span key={voiceKey} className={`col ${(this.state.voice == voice) ? 'active-voice' : ''} ${(song.voices.indexOf(voice) < 0) ? 'disabled' : ''}`} onClick={(song.voices.indexOf(voice) > -1 ? this.play.bind(this, 0, true, song.track, voice) : '')}>{voice}</span>
+				                			<span key={voiceKey} className={`col ${(this.state.voice == voice) ? 'active-voice' : ''} ${(song.voices.indexOf(voice) < 0) ? 'disabled' : ''}`} onClick={(song.voices.indexOf(voice) > -1 ? this.play.bind(this, true, song.track, voice) : '')}>{voice}</span>
 				                		);
 				                	})}
 				                </li>
