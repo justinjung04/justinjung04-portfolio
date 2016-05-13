@@ -132,7 +132,7 @@ export default class Meari extends Component {
 
 		let src;
 		if(isNew) {
-			if(process.env.NODE_ENV == 'production') {
+			if(track != this.state.track && voice != this.state.voice && process.env.NODE_ENV == 'production') {
 				window.ga('send', 'event', voice, 'listen', track);
 			}
 			src = 'assets/songs/' + track + '/' + track;
