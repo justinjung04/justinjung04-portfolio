@@ -12,6 +12,7 @@ $player-width: 55%;
 $player-max-width: 800px;
 $player-min-width: 700px;
 $player-height: 65%;
+$player-min-height: 500px;
 
 $visualizer-height: 30px;
 $visualizer-margin: 0 0 30px 0;
@@ -20,11 +21,8 @@ $control-width: 55%;
 $control-max-width: 800px;
 $control-min-width: 700px;
 $control-height: 180px;
-
-$seeker-wrapper-padding: 0 20px;
-$volume-wrapper-padding: 0 20px;
-$volume-icon-width: 20px;
-$volume-icon-padding: 0;
+$control-top-padding: 0 0 0 25px;
+$volume-wrapper-width: 70px;
 
 $list-height: calc(100% - 180px);
 $list-padding: 0 10px 25% 10px;

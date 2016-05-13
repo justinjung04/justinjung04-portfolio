@@ -197,31 +197,6 @@ export default class Meari extends Component {
 		this.seekerTime = percentage * this.source.buffer.duration;
 	}
 
-	volumeStart(e) {
-		this.isVolumeActive = true;
-		// this.setVolume(e);
-	}
-
-	volumeMove(e) {
-		if(this.isVolumeActive) {
-			// this.setVolume(e);
-		}
-	}
-
-	volumeEnd() {
-		this.isVolumeActive = false;
-	}
-
-	setVolume(e) {
-		// let clientX = (e.touches) ? e.touches[0].clientX : e.clientX;
-		// const position = clientX - this.refs.volume.getBoundingClientRect().left;
-		// const width = this.refs.volume.getBoundingClientRect().width;
-		// const volume = Math.max(Math.min(position / width, 1), 0);
-		// const isMute = (volume == 0) ? true : false;
-		// this.audio.volume = volume;
-		// this.setState({ isMute, volume });
-	}
-
 	muteVolume() {
 		// let isMute;
 		// if(this.state.isMute) {
@@ -251,7 +226,6 @@ export default class Meari extends Component {
 							</div>
 							<div className='volume-wrapper'>
 								<i className={`fa ${this.state.isMute? 'fa-volume-off' : 'fa-volume-up'}`} onClick={this.muteVolume.bind(this)}></i>
-								{this.getVolumeSVG()}
 							</div>
 						</div>
 						<div className='bottom'>
