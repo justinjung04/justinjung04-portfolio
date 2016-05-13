@@ -25,7 +25,7 @@ export default class Meari extends Component {
 		if(this.audioContext.close) {
 			this.audioContext.close();	
 		}
-		createjs.Ticker.removeEventListener('tick', this.tick);	
+		window.createjs.Ticker.removeEventListener('tick', this.tick);	
 	}
 
 	init(bufferLength, bufferOffset) {
@@ -67,18 +67,18 @@ export default class Meari extends Component {
 					}
 				}
 			}
-		}
+		};
 
 		this.bufferArray = new Uint8Array(bufferLength);
-		createjs.Ticker.addEventListener('tick', this.tick);
+		window.createjs.Ticker.addEventListener('tick', this.tick);
 	}
 
 	initVisualiser(bufferLength, bufferOffset) {
 		let barWidth = 1;
 		this.visualizerCanvas = this.refs.visualizer;
-		this.visualizer = new createjs.Stage(this.visualizerCanvas);
+		this.visualizer = new window.createjs.Stage(this.visualizerCanvas);
 		for(let i = 0; i < bufferLength - bufferOffset; i++) {
-			const shape = new createjs.Shape();
+			const shape = new window.createjs.Shape();
 			shape.graphics.beginFill('#aec6cf').drawRect(this.visualizerCanvas.width / (bufferLength - bufferOffset) * i, 0, barWidth, 1);
 			shape.alpha = 0;
 			shape.regY = 0.5;
@@ -90,12 +90,12 @@ export default class Meari extends Component {
 
 	initSeeker() {
 		this.seekerCanvas = this.refs.seeker;
-		this.seeker = new createjs.Stage(this.seekerCanvas);
-		const seekerEmpty = new createjs.Shape();
+		this.seeker = new window.createjs.Stage(this.seekerCanvas);
+		const seekerEmpty = new window.createjs.Shape();
 		seekerEmpty.graphics.beginFill('#aec6cf').drawRect(0, this.seekerCanvas.height / 2, this.seekerCanvas.width, this.seekerCanvas.height / 10);
 		seekerEmpty.regY = this.seekerCanvas.height / 20;
 		seekerEmpty.snapToPixel = true;
-		const seekerFilled = new createjs.Shape();
+		const seekerFilled = new window.createjs.Shape();
 		seekerFilled.graphics.beginFill('#526972').drawRect(-this.seekerCanvas.width, this.seekerCanvas.height / 2, this.seekerCanvas.width, this.seekerCanvas.height / 10);
 		seekerFilled.regY = this.seekerCanvas.height / 20;
 		seekerFilled.snapToPixel = true;
@@ -162,7 +162,7 @@ export default class Meari extends Component {
 				};
 				this.setState({ isPlaying: true });
 			});
-		}
+		};
 		request.send();
 	}
 
@@ -216,7 +216,6 @@ export default class Meari extends Component {
 			this.gain.gain.value = 0;
 			isMute = true;
 		}
-		console.log(this.state.isMute);
 		this.setState({ isMute });
 	}
 	
