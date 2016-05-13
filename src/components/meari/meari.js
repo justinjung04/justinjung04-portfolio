@@ -8,7 +8,6 @@ export default class Meari extends Component {
 			track: 0,
 			voice: '',
 			src: '',
-			volume: 0.5,
 			isPlaying: false,
 			isMute: false
 		};
@@ -39,12 +38,23 @@ export default class Meari extends Component {
 					this.seeker.getChildAt(1).x = this.seekerTime / this.source.buffer.duration * this.seekerCanvas.width;
 					this.seeker.update();
 				} else if(this.source.onended != null) {
-					this.analyser.getByteFrequencyData(this.bufferArray);
-					for(let i = 0; i < bufferLength - bufferOffset; i++) {
-						const shape = this.visualizer.getChildAt(i);
-						shape.scaleY = this.bufferArray[i + bufferOffset] * 0.9;
-						shape.y = this.visualizerCanvas.height / 2;
-						shape.alpha = (shape.scaleY / this.visualizerCanvas.height) + 0.1;
+					if(this.state.isMute) {
+						this.barHeight = Math.max(0, this.barHeight - 0.1);
+						for(let i = 0; i < bufferLength - bufferOffset; i++) {
+							const shape = this.visualizer.getChildAt(i);
+							shape.scaleY = this.bufferArray[i + bufferOffset] * this.barHeight;
+							shape.y = this.visualizerCanvas.height / 2;
+							shape.alpha = (shape.scaleY / this.visualizerCanvas.height) + 0.1;
+						}
+					} else {
+						this.analyser.getByteFrequencyData(this.bufferArray);
+						this.barHeight = 0.9;
+						for(let i = 0; i < bufferLength - bufferOffset; i++) {
+							const shape = this.visualizer.getChildAt(i);
+							shape.scaleY = this.bufferArray[i + bufferOffset] * this.barHeight;
+							shape.y = this.visualizerCanvas.height / 2;
+							shape.alpha = (shape.scaleY / this.visualizerCanvas.height) + 0.1;
+						}
 					}
 					this.visualizer.update();
 
@@ -197,16 +207,17 @@ export default class Meari extends Component {
 		this.seekerTime = percentage * this.source.buffer.duration;
 	}
 
-	muteVolume() {
-		// let isMute;
-		// if(this.state.isMute) {
-		// 	this.audio.volume = this.state.volume;
-		// 	isMute = false;
-		// } else {
-		// 	this.audio.volume = 0;
-		// 	isMute = true;
-		// }
-		// this.setState({ isMute });
+	toggleVolume() {
+		let isMute;
+		if(this.state.isMute) {
+			this.gain.gain.value = 1;
+			isMute = false;
+		} else {
+			this.gain.gain.value = 0;
+			isMute = true;
+		}
+		console.log(this.state.isMute);
+		this.setState({ isMute });
 	}
 	
 	render() {
@@ -224,8 +235,8 @@ export default class Meari extends Component {
 							<div className='seeker-wrapper'>
 								{this.getSeekerSVG()}
 							</div>
-							<div className='volume-wrapper'>
-								<i className={`fa ${this.state.isMute? 'fa-volume-off' : 'fa-volume-up'}`} onClick={this.muteVolume.bind(this)}></i>
+							<div className='volume-wrapper' onClick={this.toggleVolume.bind(this)}>
+								<i className={`fa ${this.state.isMute? 'fa-volume-off' : 'fa-volume-up'}`}></i>
 							</div>
 						</div>
 						<div className='bottom'>
