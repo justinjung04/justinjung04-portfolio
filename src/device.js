@@ -4,7 +4,7 @@ const md = new MobileDetect(window.navigator.userAgent);
 const device = ((md.mobile() && md.phone() != null) ? 'phone' : 'desktop');
 let bundle;
 
-if(/(chrome|safari|firefox)/i.test(window.navigator.userAgent)) {
+if(/(chrome|safari|firefox|iphone)/i.test(window.navigator.userAgent)) {
 	if(device == 'desktop') {
 		bundle = 'bundle.desktop.js';
 	} else {
