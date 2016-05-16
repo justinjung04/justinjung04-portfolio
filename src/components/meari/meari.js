@@ -172,7 +172,7 @@ export default class Meari extends Component {
 			window.ga('send', 'event', this.state.voice, 'download', this.state.track);
 		}
 	}
-	
+
 	seekerStart(e) {
 		this.isSeekerActive = true;
 		this.setSeeker(e);
@@ -218,7 +218,6 @@ export default class Meari extends Component {
 	render() {
 		return (
 			<div className='content meari'>
-				<div ref='audioContainer'></div>
 				<div className='player'>
 					<div className='control'>
 						{(this.state.src == '')
@@ -244,7 +243,6 @@ export default class Meari extends Component {
 		                	const onClickAll = this.play.bind(this, true, song.track, 'all');
 				            return (
 				                <li key={songKey} className={(this.state.track == song.track) ? 'active-song' : ''}>
-				                	<i className='col fa fa-play'></i>
 				                	<span className='col number' onClick={onClickAll}>{song.track}</span>
 				                	<span className='col title' onClick={onClickAll}>{song.title}</span>
 				                	<span className={`col ${(this.state.voice == 'all') ? 'active-voice' : ''}`} onClick={onClickAll}>All</span>

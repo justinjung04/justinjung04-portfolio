@@ -1,7 +1,7 @@
 $background-color: #ddf9e9;
 $color: #aec6cf;
 $dark-color: #526972;
-$font-size: 3vw;
+$font-size: 2.9vw;
 
 $btn-margin: 0 0 40px 0;
 $btn-padding: 10px 10px 20px 10px;
@@ -28,9 +28,9 @@ $list-height: calc(100% - 150px);
 $list-padding: 0 10px 25% 1vw;
 $list-col-height: 10vw;
 $list-col-padding: 0 1%;
-$list-col-fa-width: 5%;
-$list-col-number-width: 7%;
-$list-col-title-width: 38%;
+$list-col-number-width: 9%;
+$list-col-number-padding: 0 0 0 5px;
+$list-col-title-width: 44%;
 $list-fade-width: calc(100% - 10px);
 
 @import './meari.scss';

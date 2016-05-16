@@ -143,32 +143,28 @@
 			padding: $list-col-padding;
 			cursor: pointer;
 			text-transform: capitalize;
+			overflow: hidden;
 
 			&.disabled {
 				opacity: 0.25;
 				cursor: default;
 			}
 
-			&.fa {
-				width: $list-col-fa-width;
-				padding: 0;
-				opacity: 0;
-				cursor: default;
-			}
-
 			&.number {
 				width: $list-col-number-width;
-				padding: 0;
+				padding: $list-col-number-padding;
+				box-sizing: border-box;
 			}
 
 			&.title {
 				width: $list-col-title-width;
+				white-space: nowrap;
+				text-overflow: ellipsis;
 				padding: 0;
 			}
 		}
 
 		.active-song {
-			.fa,
 			.number,
 			.title,
 			.active-voice {
