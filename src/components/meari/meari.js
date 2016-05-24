@@ -12,6 +12,7 @@ export default class Meari extends Component {
 			isMute: false
 		};
 		this.voices = ['soprano', 'alto', 'tenor', 'bass'];
+		this.request = new XMLHttpRequest();
 	}
 
 	componentDidMount() {
@@ -118,6 +119,7 @@ export default class Meari extends Component {
 		if(!this.gain) {
 			this.gain = this.audioContext.createGain();
 			this.gain.connect(this.analyser);
+			this.gain.gain.value = 2;
 		}
 
 		if(this.source) {
@@ -138,7 +140,7 @@ export default class Meari extends Component {
 			src = this.state.src;
 		}
 
-		const request = new XMLHttpRequest();
+		request.abort();
 		request.open('GET', src, true);
 		request.responseType = 'arraybuffer';
 		request.onload = () => {
