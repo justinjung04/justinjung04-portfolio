@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import songs from '../../constants/songs';
+import WebAudio from 'tb-web-audio';
 
 export default class Meari extends Component {
 	constructor() {
@@ -13,6 +14,8 @@ export default class Meari extends Component {
 		};
 		this.voices = ['soprano', 'alto', 'tenor', 'bass'];
 		this.request = new XMLHttpRequest();
+		this.webAudio = new WebAudio();
+		this.webAudio.setVolume(2);
 	}
 
 	componentDidMount() {
@@ -23,9 +26,6 @@ export default class Meari extends Component {
 	}
 
 	componentWillUnmount() {
-		if(this.audioContext.close) {
-			this.audioContext.close();	
-		}
 		window.createjs.Ticker.removeEventListener('tick', this.tick);	
 	}
 
@@ -34,41 +34,31 @@ export default class Meari extends Component {
 		this.initSeeker();
 
 		this.tick = () => {
-			if(this.analyser && this.source) {
-				if(this.isSeekerActive) {
-					this.seeker.getChildAt(1).x = this.seekerTime / this.source.buffer.duration * this.seekerCanvas.width;
-					this.seeker.update();
-				} else if(this.source.onended != null) {
-					if(this.state.isMute) {
-						this.barHeight = Math.max(0, this.barHeight - 0.1);
-						for(let i = 0; i < bufferLength - bufferOffset; i++) {
-							const shape = this.visualizer.getChildAt(i);
-							shape.scaleY = this.bufferArray[i + bufferOffset] * this.barHeight;
-							shape.alpha = (shape.scaleY / this.visualizerCanvas.height) + 0.1;
-						}
-					} else {
-						this.analyser.getByteFrequencyData(this.bufferArray);
-						this.barHeight = 0.9;
-						for(let i = 0; i < bufferLength - bufferOffset; i++) {
-							const shape = this.visualizer.getChildAt(i);
-							shape.scaleY = this.bufferArray[i + bufferOffset] * this.barHeight;
-							shape.alpha = (shape.scaleY / this.visualizerCanvas.height) + 0.1;
-						}
-					}
-					this.visualizer.update();
+			if(this.state.src != '') {
+				if(!this.isSeekerActive) {
+					this.seeker.getChildAt(1).x = this.webAudio.getCurrentTime() / this.webAudio.getDuration() * this.seekerCanvas.width;
+					this.seeker.update();	
+				}
 
-					if(this.state.isPlaying) {
-						this.seeker.getChildAt(1).x = this.seekerTime / this.source.buffer.duration * this.seekerCanvas.width;
-						const updatedTime = (new Date().getTime()) / 1000;
-						this.seekerTime += updatedTime - this.currentTime;
-						this.currentTime = updatedTime;
-						this.seeker.update();
+				if(this.state.isMute) {
+					this.barHeight = Math.max(0, this.barHeight - 0.1);
+					for(let i = 0; i < bufferLength - bufferOffset; i++) {
+						const shape = this.visualizer.getChildAt(i);
+						shape.scaleY = this.webAudio.getFreqData()[i + bufferOffset] * this.barHeight;
+						shape.alpha = (shape.scaleY / this.visualizerCanvas.height) + 0.1;
+					}
+				} else {
+					this.barHeight = 0.9;
+					for(let i = 0; i < bufferLength - bufferOffset; i++) {
+						const shape = this.visualizer.getChildAt(i);
+						shape.scaleY = this.webAudio.getFreqData()[i + bufferOffset] * this.barHeight;
+						shape.alpha = (shape.scaleY / this.visualizerCanvas.height) + 0.1;
 					}
 				}
+				this.visualizer.update();
 			}
 		};
 
-		this.bufferArray = new Uint8Array(bufferLength);
 		window.createjs.Ticker.addEventListener('tick', this.tick);
 	}
 
@@ -100,72 +90,31 @@ export default class Meari extends Component {
 		this.seeker.update();
 	}
 
-	play(isNew, track, voice) {
-		if(this.state.src == '') {
-			this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-			if(this.audioContext.sampleRate != 44100) {
-				if(this.audioContext.close) {
-					this.audioContext.close();	
-				}
-				this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-			}
+	load(track, voice) {
+		if(track != this.state.track && voice != this.state.voice && process.env.NODE_ENV == 'production') {
+			window.ga('send', 'event', voice, 'listen', track);
 		}
 
-		if(!this.analyser) {
-			this.analyser = this.audioContext.createAnalyser();
-			this.analyser.connect(this.audioContext.destination);
-		}
+		let src = 'assets/songs/' + track + '/' + track;
+		src += (voice != 'all') ? '_' + voice + '.mp3' : '.mp3';
+		
+		this.webAudio.load(src, () => {
+			this.setState({ track, voice, src, isPlaying: true });
+		}, () => {
+			this.setState({ isPlaying: false });
+		}, true, false);
+	}
 
-		if(!this.gain) {
-			this.gain = this.audioContext.createGain();
-			this.gain.connect(this.analyser);
-			this.gain.gain.value = 2;
+	play() {
+		if(this.webAudio.getCurrentTime() == this.webAudio.getDuration()) {
+			this.webAudio.setCurrentTime(0);
 		}
-
-		if(this.source) {
-			this.source.disconnect();
-			this.source.onended = null;
-		}
-
-		let src;
-		if(isNew) {
-			if(track != this.state.track && voice != this.state.voice && process.env.NODE_ENV == 'production') {
-				window.ga('send', 'event', voice, 'listen', track);
-			}
-			src = 'assets/songs/' + track + '/' + track;
-			src += (voice != 'all') ? '_' + voice + '.mp3' : '.mp3';
-			this.setState({ track, voice, src });
-			this.seekerTime = 0;
-		} else {
-			src = this.state.src;
-		}
-
-		request.abort();
-		request.open('GET', src, true);
-		request.responseType = 'arraybuffer';
-		request.onload = () => {
-			this.audioContext.decodeAudioData(request.response, (buffer) => {
-				this.currentTime = new Date().getTime() / 1000;
-				this.source = this.audioContext.createBufferSource();
-				this.source.buffer = buffer;
-				this.source.connect(this.gain);
-				this.source.start(0, this.seekerTime);
-				this.source.onended = () => {
-					const seekerFilled = this.seeker.getChildAt(1);
-					seekerFilled.x = this.seekerCanvas.width;
-					this.seeker.update();
-					this.seekerTime = 0;
-					this.setState({ isPlaying: false });
-				};
-				this.setState({ isPlaying: true });
-			});
-		};
-		request.send();
+		this.webAudio.play();
+		this.setState({ isPlaying: true });
 	}
 
 	pause() {
-		this.source.disconnect();
-		this.source.onended = null;
+		this.webAudio.pause();
 		this.setState({ isPlaying: false });
 	}
 
@@ -178,7 +127,7 @@ export default class Meari extends Component {
 	seekerStart(e) {
 		this.isSeekerActive = true;
 		this.setSeeker(e);
-		this.source.disconnect();
+		this.webAudio.pause();
 	}
 
 	seekerMove(e) {
@@ -188,9 +137,11 @@ export default class Meari extends Component {
 	}
 
 	seekerEnd() {
-		if(this.isSeekerActive && (this.state.isPlaying || this.source.onended != null)) {
-			this.play(false);
-			if(this.source.onended != null) {
+		if(this.isSeekerActive) {
+			const currentTime = this.webAudio.getCurrentTime();
+			this.webAudio.setCurrentTime(this.percentage * this.webAudio.getDuration());
+			if(this.state.isPlaying || currentTime == this.webAudio.getDuration()) {
+				this.webAudio.play();
 				this.setState({ isPlaying: true });
 			}
 		}
@@ -201,17 +152,18 @@ export default class Meari extends Component {
 		const clientX = (e.touches) ? e.touches[0].clientX : e.clientX;
 		const position = clientX - this.refs.seeker.getBoundingClientRect().left;
 		const width = this.refs.seeker.getBoundingClientRect().width;
-		const percentage = Math.max(Math.min(position / width, 1), 0);
-		this.seekerTime = percentage * this.source.buffer.duration;
+		this.percentage = Math.max(Math.min(position / width, 1), 0);
+		this.seeker.getChildAt(1).x = this.percentage * this.seekerCanvas.width;
+		this.seeker.update();
 	}
 
 	toggleVolume() {
 		let isMute;
 		if(this.state.isMute) {
-			this.gain.gain.value = 1;
+			this.webAudio.unmute();
 			isMute = false;
 		} else {
-			this.gain.gain.value = 0;
+			this.webAudio.mute();
 			isMute = true;
 		}
 		this.setState({ isMute });
@@ -236,13 +188,13 @@ export default class Meari extends Component {
 							</div>
 						</div>
 						<div className='bottom'>
-							<div className='btn play' onClick={this.state.isPlaying ? this.pause.bind(this) : this.play.bind(this, false)}>{(this.state.isPlaying)? 'PAUSE' : 'PLAY'}</div>
+							<div className='btn play' onClick={this.state.isPlaying ? this.pause.bind(this) : this.play.bind(this)}>{(this.state.isPlaying)? 'PAUSE' : 'PLAY'}</div>
 							<a className='btn download' href={this.state.src} download={this.state.src.split('/')[3]} onClick={this.downloadTrack.bind(this)}>DOWNLOAD</a>
 						</div>
 					</div>
 					<ul className='list'>
 		                {songs.map((song, songKey) => {
-		                	const onClickAll = this.play.bind(this, true, song.track, 'all');
+		                	const onClickAll = this.load.bind(this, song.track, 'all');
 				            return (
 				                <li key={songKey} className={(this.state.track == song.track) ? 'active-song' : ''}>
 				                	<span className='col number' onClick={onClickAll}>{song.track}</span>
@@ -250,7 +202,7 @@ export default class Meari extends Component {
 				                	<span className={`col ${(this.state.voice == 'all') ? 'active-voice' : ''}`} onClick={onClickAll}>All</span>
 				                	{this.voices.map((voice, voiceKey) => {
 				                		return (
-				                			<span key={voiceKey} className={`col ${(this.state.voice == voice) ? 'active-voice' : ''} ${(song.voices.indexOf(voice) < 0) ? 'disabled' : ''}`} onClick={(song.voices.indexOf(voice) > -1 ? this.play.bind(this, true, song.track, voice) : '')}>{voice}</span>
+				                			<span key={voiceKey} className={`col ${(this.state.voice == voice) ? 'active-voice' : ''} ${(song.voices.indexOf(voice) < 0) ? 'disabled' : ''}`} onClick={(song.voices.indexOf(voice) > -1 ? this.load.bind(this, song.track, voice) : '')}>{voice}</span>
 				                		);
 				                	})}
 				                </li>
