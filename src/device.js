@@ -1,8 +1,8 @@
 import MobileDetect from 'mobile-detect';
 
-const md = new MobileDetect(window.navigator.userAgent);
-const device = ((md.mobile() && md.phone() != null) ? 'phone' : 'desktop');
-let bundle;
+var md = new MobileDetect(window.navigator.userAgent);
+var device = ((md.mobile() && md.phone() != null) ? 'phone' : 'desktop');
+var bundle;
 
 if(/(chrome|safari|firefox|iphone)/i.test(window.navigator.userAgent)) {
 	if(device == 'desktop') {
@@ -14,7 +14,7 @@ if(/(chrome|safari|firefox|iphone)/i.test(window.navigator.userAgent)) {
 	bundle = 'bundle.nosupport.js';
 }
 
-const script = document.createElement('script');
+var script = document.createElement('script');
 script.setAttribute('src', bundle);
 
 document.body.appendChild(script);

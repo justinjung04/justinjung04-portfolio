@@ -13,7 +13,6 @@ export default class Meari extends Component {
 			isMute: false
 		};
 		this.voices = ['soprano', 'alto', 'tenor', 'bass'];
-		this.request = new XMLHttpRequest();
 		this.webAudio = new WebAudio();
 		this.webAudio.setVolume(2);
 	}
@@ -35,7 +34,7 @@ export default class Meari extends Component {
 
 		this.tick = () => {
 			if(this.state.src != '') {
-				if(!this.isSeekerActive) {
+				if(!this.isSeekerActive && this.webAudio.isPlaying()) {
 					this.seeker.getChildAt(1).x = this.webAudio.getCurrentTime() / this.webAudio.getDuration() * this.seekerCanvas.width;
 					this.seeker.update();	
 				}
