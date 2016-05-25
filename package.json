@@ -32,6 +32,7 @@
     "html-webpack-plugin": "^2.17.0",
     "mobile-detect": "^1.3.1",
     "node-sass": "^3.4.2",
+    "openurl": "^1.1.1",
     "postcss-loader": "^0.9.1",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
