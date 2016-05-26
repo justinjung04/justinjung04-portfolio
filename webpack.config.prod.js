@@ -28,22 +28,19 @@ module.exports = {
                 warnings: false
             }
         }),
-        // new HtmlWebpackPlugin({ 
-        //     filename: 'index.html',
-        //     template: path.join(__dirname, '/src/index.html'),
-        //     minify: {
-        //         removeComments: true,
-        //         collapseWhitespace: true
-        //     }
-        // }),
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: path.join(__dirname, '/src/index.html'),
+            inject: false,
+            // minify: {
+            //     removeComments: true,
+            //     collapseWhitespace: true
+            // }
+        }),
         new CopyWebpackPlugin([
             {
                 from: path.join(__dirname, '/src/assets/'),
                 to: './assets/'
-            },
-            {
-                from: path.join(__dirname, '/src/index.html'),
-                to: './'
             },
             {
                 from: path.join(__dirname, '/src/.htaccess'),
