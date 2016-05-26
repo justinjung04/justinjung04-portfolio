@@ -32,10 +32,10 @@ module.exports = {
             filename: 'index.html',
             template: path.join(__dirname, '/src/index.html'),
             inject: false,
-            // minify: {
-            //     removeComments: true,
-            //     collapseWhitespace: true
-            // }
+            minify: {
+                removeComments: true,
+                collapseWhitespace: true
+            }
         }),
         new CopyWebpackPlugin([
             {
