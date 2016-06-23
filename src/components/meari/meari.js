@@ -94,6 +94,12 @@ export default class Meari extends Component {
 			window.ga('send', 'event', voice, 'listen', track);
 		}
 
+		if(/^_/.test(track)) {
+			this.webAudio.setVolume(1);
+		} else {
+			this.webAudio.setVolume(2);
+		}
+
 		let src = 'assets/songs/' + track + '/' + track;
 		src += (voice != 'all') ? '_' + voice + '.mp3' : '.mp3';
 		
