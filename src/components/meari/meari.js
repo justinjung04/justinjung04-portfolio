@@ -99,6 +99,9 @@ export default class Meari extends Component {
 		} else {
 			this.webAudio.setVolume(2);
 		}
+		if(this.state.isMute) {
+			this.webAudio.mute();
+		}
 
 		let src = 'assets/songs/' + track + '/' + track;
 		src += (voice != 'all') ? '_' + voice + '.mp3' : '.mp3';
