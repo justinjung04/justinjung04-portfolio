@@ -12,7 +12,7 @@ export default class Meari extends Component {
 			isPlaying: false,
 			isMute: false
 		};
-		this.voices = ['soprano', 'alto', 'tenor', 'bass'];
+		this.voices = ['all', 'soprano', 'alto', 'tenor', 'bass'];
 		this.webAudio = new WebAudio();
 		this.webAudio.setVolume(2);
 	}
@@ -198,7 +198,6 @@ export default class Meari extends Component {
 				                <li key={songKey} className={(this.state.track == song.track) ? 'active-song' : ''}>
 				                	<span className='col number' onClick={onClickAll}>{song.track}</span>
 				                	<span className='col title' onClick={onClickAll}>{song.title}</span>
-				                	<span className={`col ${(this.state.voice == 'all') ? 'active-voice' : ''}`} onClick={onClickAll}>All</span>
 				                	{this.voices.map((voice, voiceKey) => {
 				                		return (
 				                			<span key={voiceKey} className={`col ${(this.state.voice == voice) ? 'active-voice' : ''} ${(song.voices.indexOf(voice) < 0) ? 'disabled' : ''}`} onClick={(song.voices.indexOf(voice) > -1 ? this.load.bind(this, song.track, voice) : '')}>{voice}</span>
